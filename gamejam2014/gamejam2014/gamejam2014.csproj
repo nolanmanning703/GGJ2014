@@ -129,6 +129,7 @@
     <Compile Include="Minigames\Minigame 4\ArtAssets4.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Minigames\Minigame 4\Minigame4.cs" />
     <Compile Include="Minigames\Minigame 4\PhysicsData4.cs" />
     <Compile Include="Minigames\Minigame 4\SoundAssets4.cs" />
     <Compile Include="Minigames\Minigame 5\ArtAssets5.cs" />
