@@ -50,6 +50,16 @@ namespace gamejam2014
             Utilities.Graphics.TexturePrimitiveDrawer.MakeBlankDrawingTex(GraphicsDevice);
             WorldData.Initialize(GraphicsDevice);
             ArtAssets.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_1.ArtAssets1.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_2.ArtAssets2.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_3.ArtAssets3.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_4.ArtAssets4.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_5.ArtAssets5.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_1.SoundAssets1.Initialize(Content);
+            Minigames.Minigame_2.SoundAssets2.Initialize(Content);
+            Minigames.Minigame_3.SoundAssets3.Initialize(Content);
+            Minigames.Minigame_4.SoundAssets4.Initialize(Content);
+            Minigames.Minigame_5.SoundAssets5.Initialize(Content);
 
             graphics.PreferredBackBufferWidth = ArtAssets.WorldBackgrounds[ZoomLevels.One].Width;
             graphics.PreferredBackBufferHeight = ArtAssets.WorldBackgrounds[ZoomLevels.One].Height;
