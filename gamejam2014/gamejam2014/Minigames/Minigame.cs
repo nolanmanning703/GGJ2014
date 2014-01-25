@@ -21,8 +21,9 @@ namespace gamejam2014.Minigames
         /// </summary>
         public bool MoveDown { get; set; }
 
-        public Jousting.Jouster Harmony, Dischord;
         public ZoomLevels CurrentZoom;
+
+        public Jousting.Jouster Harmony, Dischord;
 
         protected Utilities.Graphics.AnimatedSprite HarmonySprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Harmony]; } }
         protected Utilities.Graphics.AnimatedSprite DischordSprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Dischord]; } }

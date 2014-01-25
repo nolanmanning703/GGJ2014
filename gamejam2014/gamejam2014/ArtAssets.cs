@@ -72,7 +72,7 @@ namespace gamejam2014
             },
         };
 
-        public static SpriteFont DebugFont;
+        public static SpriteFont DebugFont, WorldFont;
 
         public static List<Vector2> GetJousterPolygon(ZoomLevels zoom)
         {
@@ -146,6 +146,7 @@ namespace gamejam2014
             }
 
             DebugFont = content.Load<SpriteFont>("DebugFont");
+            WorldFont = content.Load<SpriteFont>("WorldFont");
         }
     }
 }

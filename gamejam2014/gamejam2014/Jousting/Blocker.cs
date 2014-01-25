@@ -25,7 +25,11 @@ namespace gamejam2014.Jousting
         {
             if (!first.ColShape.Touches(second.ColShape)) return null;
 
+            BlockerCollisionData dat = new BlockerCollisionData(first, second, first.Velocity, second.Velocity);
 
+            first.OnHitBlocker(second);
+
+            return dat;
         }
         /// <summary>
         /// Processes a potential collision between a blocker and a jouster.
@@ -35,7 +39,15 @@ namespace gamejam2014.Jousting
         {
             if (!block.ColShape.Touches(joust.ColShape)) return Single.NaN;
 
+            V2 lookDir = UsefulMath.FindDirection(joust.Rotation),
+               moveDir = joust.Velocity;
+            float stabStrength = V2.Dot(lookDir, moveDir);
 
+            if (stabStrength <= 0.0f) return Single.NaN;
+
+            block.OnHitJouster(joust, stabStrength);
+
+            return stabStrength;
         }
 
 
@@ -113,6 +125,40 @@ namespace gamejam2014.Jousting
             }
 
             return input;
+        }
+
+        public void OnHitJouster(Jouster other, float stabForce)
+        {
+            if (OnHitByJouster != null) OnHitByJouster(this, new Jouster.HurtEventArgs(other, stabForce));
+
+            //Dull the jouster's momentum, and push this one forward.
+            V2 newVel = other.Velocity * KarmaWorld.World.PhysicsData.BounceEnergyScale * PhysicsData.VelocityDampFromHit(stabForce, other.MaxVelocity);
+            V2 delta = other.Velocity - newVel;
+            other.Velocity = newVel;
+            Velocity += delta;
+
+        }
+        public void OnHitBlocker(Blocker other)
+        {
+            if (OnHitByBlocker != null) OnHitByBlocker(this, new HitBlockerEventArgs(other));
+            if (other.OnHitByBlocker != null) other.OnHitByBlocker(this, new HitBlockerEventArgs(this));
+
+            //Both entities keep the portion of momentum parallel to their tangent,
+            //But swap the portion of momentum perpendicular to their tangent.
+
+            V2 thisMomentum = Velocity,
+               otherMomentum = other.Velocity;
+
+            V2 toOther = other.Pos - Pos;
+            V2 tangent = V2.Normalize(Utilities.Conversions.GetPerp(toOther));
+
+            V2 thisMomentumParallel = tangent * V2.Dot(thisMomentum, tangent),
+               otherMomentumParallel = tangent * V2.Dot(otherMomentum, tangent);
+            V2 thisMomentumPerpendicular = thisMomentum - thisMomentumParallel,
+               otherMomentumPerpendicular = otherMomentum - otherMomentumParallel;
+
+            Velocity = thisMomentumParallel + (BounceVelocityDamp * otherMomentumPerpendicular);
+            other.Velocity = otherMomentumParallel + (other.BounceVelocityDamp * thisMomentumPerpendicular);
         }
     }
 }

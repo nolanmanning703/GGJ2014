@@ -24,7 +24,7 @@ namespace gamejam2014.Jousting
         /// </summary>
         public static CollisionData CheckCollision(Jouster first, Jouster second)
         {
-            //If the player aren't touching, exit.
+            //If the players aren't touching, exit.
             if (!first.ColShape.Touches(second.ColShape))
             {
                 first.touchingOtherJouster = false;
@@ -125,7 +125,7 @@ namespace gamejam2014.Jousting
                 input.X = bounds.Left;
                 if (Velocity.X < 0.0f)
                 {
-                    Velocity = new V2(-Velocity.X * PhysData.EdgeBounceEnergyScale, Velocity.Y);
+                    Velocity = new V2(-Velocity.X * PhysData.BounceEnergyScale, Velocity.Y);
                 }
 
                 if (OnWallBounce != null)
@@ -136,7 +136,7 @@ namespace gamejam2014.Jousting
                 input.Y = bounds.Top;
                 if (Velocity.Y < 0.0f)
                 {
-                    Velocity = new V2(Velocity.X, -Velocity.Y * PhysData.EdgeBounceEnergyScale);
+                    Velocity = new V2(Velocity.X, -Velocity.Y * PhysData.BounceEnergyScale);
                 }
 
                 if (OnWallBounce != null)
@@ -147,7 +147,7 @@ namespace gamejam2014.Jousting
                 input.X = bounds.Right;
                 if (Velocity.X > 0.0f)
                 {
-                    Velocity = new V2(-Velocity.X * PhysData.EdgeBounceEnergyScale, Velocity.Y);
+                    Velocity = new V2(-Velocity.X * PhysData.BounceEnergyScale, Velocity.Y);
                 }
 
                 if (OnWallBounce != null)
@@ -158,7 +158,7 @@ namespace gamejam2014.Jousting
                 input.Y = bounds.Bottom;
                 if (Velocity.Y > 0.0f)
                 {
-                    Velocity = new V2(Velocity.X, -Velocity.Y * PhysData.EdgeBounceEnergyScale);
+                    Velocity = new V2(Velocity.X, -Velocity.Y * PhysData.BounceEnergyScale);
                 }
 
                 if (OnWallBounce != null)
@@ -210,12 +210,12 @@ namespace gamejam2014.Jousting
 
         public void HurtBy(Jouster other, float stabDamage)
         {
-            Velocity += PhysicsData.VelocityFromHit(stabDamage, UsefulMath.FindDirection(other.RotAcceleration));
+            Velocity += PhysData.BounceEnergyScale * PhysicsData.VelocityFromHit(stabDamage, UsefulMath.FindDirection(other.RotAcceleration));
             if (OnHurtByEnemy != null) OnHurtByEnemy(this, new HurtEventArgs(other, stabDamage));
         }
         public void Hurt(Jouster other, float stabDamage)
         {
-            Velocity *= PhysicsData.VelocityDampFromHit(stabDamage, MaxVelocity);
+            Velocity *= PhysData.BounceEnergyScale * PhysicsData.VelocityDampFromHit(stabDamage, MaxVelocity);
             if (OnHurtEnemy != null) OnHurtEnemy(this, new HurtEventArgs(other, stabDamage));
         }
     }

@@ -102,8 +102,8 @@ namespace gamejam2014
             Timers = new Utilities.TimerManager();
             Input = new ButtonInputManager();
 
-            Input.AddInput("Zoom In", new KeyboardButton(Keys.Up, true));
-            Input.AddInput("Zoom Out", new KeyboardButton(Keys.Down, true));
+            Input.AddInput("Zoom In", new KeyboardButton(Keys.PageUp, true));
+            Input.AddInput("Zoom Out", new KeyboardButton(Keys.PageDown, true));
 
             CurrentTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
 
