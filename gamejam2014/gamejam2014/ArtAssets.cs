@@ -153,9 +153,11 @@ namespace gamejam2014
 
             SpecialUIAlert[Jousting.Jousters.Harmony] = new AnimatedSprite(content.Load<Texture2D>("Art/Special H"));
             SpecialUIAlert[Jousting.Jousters.Harmony].DrawArgs.Origin = new Vector2(0.0f, SpecialUIAlert[Jousting.Jousters.Harmony].ExactHeight);
+            SpecialUIAlert[Jousting.Jousters.Harmony].DrawArgs.Scale *= 2.0f;
             SpecialUIAlert[Jousting.Jousters.Dischord] = new AnimatedSprite(content.Load<Texture2D>("Art/Special C"));
             SpecialUIAlert[Jousting.Jousters.Dischord].DrawArgs.Origin = new Vector2(SpecialUIAlert[Jousting.Jousters.Dischord].ExactWidth,
                                                                                      SpecialUIAlert[Jousting.Jousters.Dischord].ExactHeight);
+            SpecialUIAlert[Jousting.Jousters.Dischord].DrawArgs.Scale *= 2.0f;
 
             DebugFont = content.Load<SpriteFont>("DebugFont");
             WorldFont = content.Load<SpriteFont>("WorldFont");
@@ -188,7 +190,7 @@ namespace gamejam2014
             if (specialAmount == 1.0f)
             {
                 const float offsetX = border + 10.0f,
-                            offsetY = height + 10.0f;
+                            offsetY = height + border + 10.0f;
                 SpecialUIAlert[Jousting.Jousters.Harmony].Draw(new Vector2(offsetX, windowSize.Y - offsetY), sb);
                 SpecialUIAlert[Jousting.Jousters.Dischord].Draw(new Vector2(windowSize.X - offsetX, windowSize.Y - offsetY), sb);
             }
