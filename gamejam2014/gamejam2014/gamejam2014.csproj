@@ -118,16 +118,22 @@
     <Compile Include="KarmaCamera.cs" />
     <Compile Include="KarmaWorld.cs" />
     <Compile Include="Minigames\Minigame 1\ArtAssets1.cs" />
+    <Compile Include="Minigames\Minigame 1\PhysicsData1.cs" />
     <Compile Include="Minigames\Minigame 1\SoundAssets1.cs" />
     <Compile Include="Minigames\Minigame 2\ArtAssets2.cs" />
+    <Compile Include="Minigames\Minigame 2\PhysicsData2.cs" />
     <Compile Include="Minigames\Minigame 2\SoundAssets2.cs" />
     <Compile Include="Minigames\Minigame 3\ArtAssets3.cs" />
+    <Compile Include="Minigames\Minigame 3\PhysicsData3.cs" />
     <Compile Include="Minigames\Minigame 3\SoundAssets3.cs" />
     <Compile Include="Minigames\Minigame 4\ArtAssets4.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Minigames\Minigame 4\PhysicsData4.cs" />
     <Compile Include="Minigames\Minigame 4\SoundAssets4.cs" />
     <Compile Include="Minigames\Minigame 5\ArtAssets5.cs" />
+    <Compile Include="Minigames\Minigame 5\Minigame5.cs" />
+    <Compile Include="Minigames\Minigame 5\PhysicsData5.cs" />
     <Compile Include="Minigames\Minigame 5\SoundAssets5.cs" />
     <Compile Include="Minigames\Minigame.cs" />
     <Compile Include="Minigames\TestMinigame.cs" />
