@@ -40,9 +40,12 @@ namespace gamejam2014
 
             set
             {
+                bool zoomIn = (value == WorldData.ZoomIn(currentZoom));
+
                 currentZoom = value;
 
-                Camera.ZoomData.MaxZoomSpeed = WorldData.CameraZoomSpeed(value);
+                if (zoomIn) Camera.ZoomData.MaxZoomSpeed = WorldData.CameraZoomSpeed(value);
+                else Camera.ZoomData.MaxZoomSpeed = WorldData.CameraZoomSpeed(WorldData.ZoomIn(value));
 
                 CurrentMinigame = WorldData.Minigames[value];
                 if (CurrentMinigame != null) CurrentMinigame.ResetGame();

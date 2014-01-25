@@ -93,6 +93,9 @@
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -111,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArtAssets.cs" />
+    <Compile Include="Jousting\JousterPhysicsData.cs" />
     <Compile Include="KarmaCamera.cs" />
     <Compile Include="KarmaWorld.cs" />
     <Compile Include="Minigames\Minigame.cs" />
