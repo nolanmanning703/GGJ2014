@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Utilities.Graphics;
 
 namespace gamejam2014
 {
@@ -32,15 +33,61 @@ namespace gamejam2014
             { ZoomLevels.One, 0.0f },
         };
 
+        public static Dictionary<ZoomLevels, Dictionary<Jousting.Jousters, AnimatedSprite>> PlayerSprites = new Dictionary<ZoomLevels,Dictionary<Jousting.Jousters,AnimatedSprite>>()
+        {
+            { ZoomLevels.One,
+                new Dictionary<Jousting.Jousters, AnimatedSprite>()
+                {
+                    { Jousting.Jousters.Dischord, null },
+                    { Jousting.Jousters.Harmony, null },
+                }
+            },
+            { ZoomLevels.Two,
+                new Dictionary<Jousting.Jousters, AnimatedSprite>()
+                {
+                    { Jousting.Jousters.Dischord, null },
+                    { Jousting.Jousters.Harmony, null },
+                }
+            },
+            { ZoomLevels.Three,
+                new Dictionary<Jousting.Jousters, AnimatedSprite>()
+                {
+                    { Jousting.Jousters.Dischord, null },
+                    { Jousting.Jousters.Harmony, null },
+                }
+            },
+            { ZoomLevels.Four,
+                new Dictionary<Jousting.Jousters, AnimatedSprite>()
+                {
+                    { Jousting.Jousters.Dischord, null },
+                    { Jousting.Jousters.Harmony, null },
+                }
+            },
+            { ZoomLevels.Five,
+                new Dictionary<Jousting.Jousters, AnimatedSprite>()
+                {
+                    { Jousting.Jousters.Dischord, null },
+                    { Jousting.Jousters.Harmony, null },
+                }
+            },
+        };
+
         public static SpriteFont DebugFont;
 
         public static List<Vector2> GetJousterPolygon(ZoomLevels zoom)
         {
+            float scale = WorldData.ZoomScaleAmount[zoom];
             switch (zoom)
             {
-                    //TODO: Fill.
                 case ZoomLevels.One:
-                    return null;
+                    return new List<Vector2>()
+                    {
+                        new Vector2(64.0f, 32.0f) * scale,
+                        new Vector2(12.0f, 63.0f) * scale,
+                        new Vector2(0.0f, 64.0f) * scale,
+                        new Vector2(0.0f, 0.0f) * scale,
+                        new Vector2(12.0f, 1.0f) * scale,
+                    };
                 case ZoomLevels.Two:
                     return null;
                 case ZoomLevels.Three:
@@ -56,11 +103,19 @@ namespace gamejam2014
 
         public static void Initialize(GraphicsDevice gd, ContentManager content)
         {
-            WorldBackgrounds[ZoomLevels.One] = content.Load<Texture2D>("Art/Z1");
-            WorldBackgrounds[ZoomLevels.Two] = content.Load<Texture2D>("Art/Z2");
-            WorldBackgrounds[ZoomLevels.Three] = content.Load<Texture2D>("Art/Z3");
-            WorldBackgrounds[ZoomLevels.Four] = content.Load<Texture2D>("Art/Z4");
-            WorldBackgrounds[ZoomLevels.Five] = content.Load<Texture2D>("Art/Z5");
+            foreach (ZoomLevels zoom in WorldData.AscendingZooms)
+            {
+                string zoomS = WorldData.ZoomToInt(zoom).ToString();
+
+                WorldBackgrounds[zoom] = content.Load<Texture2D>("Art/Z" + zoomS);
+
+                foreach (Jousting.Jousters jouster in Utilities.OtherFunctions.GetValues<Jousting.Jousters>())
+                {
+                    string jousterS = (jouster == Jousting.Jousters.Dischord ? "C" : "H");
+                    PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS));
+                    PlayerSprites[zoom][jouster].SetOriginToCenter();
+                }
+            }
 
             DebugFont = content.Load<SpriteFont>("DebugFont");
         }

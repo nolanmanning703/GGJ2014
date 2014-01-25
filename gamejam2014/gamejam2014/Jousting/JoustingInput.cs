@@ -9,7 +9,7 @@ namespace gamejam2014.Jousting
     public enum Jousters
     {
         Harmony,
-        Chaos,
+        Dischord,
     }
 
     /// <summary>
@@ -22,20 +22,20 @@ namespace gamejam2014.Jousting
         private static Dictionary<Jousters, string> PlayerToString = new Dictionary<Jousters,string>()
         {
             { Jousters.Harmony, "Harmony " },
-            { Jousters.Chaos, "Chaos " },
+            { Jousters.Dischord, "Chaos " },
         };
 
 
         public static void InitializeInput()
         {
             Input.AddInput(PlayerToString[Jousters.Harmony] + "Movement", new FourArrowButton(KeyboardKeys.W, KeyboardKeys.S, KeyboardKeys.A, KeyboardKeys.D));
-            Input.AddInput(PlayerToString[Jousters.Chaos] + "Movement", new FourArrowButton(KeyboardKeys.Up, KeyboardKeys.Down, KeyboardKeys.Left, KeyboardKeys.Right));
+            Input.AddInput(PlayerToString[Jousters.Dischord] + "Movement", new FourArrowButton(KeyboardKeys.Up, KeyboardKeys.Down, KeyboardKeys.Left, KeyboardKeys.Right));
 
             Input.AddInput(PlayerToString[Jousters.Harmony] + "Special", new KeyboardButton(KeyboardKeys.NumPad0));
-            Input.AddInput(PlayerToString[Jousters.Chaos] + "Special", new KeyboardButton(KeyboardKeys.Q));
+            Input.AddInput(PlayerToString[Jousters.Dischord] + "Special", new KeyboardButton(KeyboardKeys.Q));
 
             Input.AddInput(PlayerToString[Jousters.Harmony] + "Hold Special", new KeyboardButton(KeyboardKeys.LeftShift));
-            Input.AddInput(PlayerToString[Jousters.Chaos] + "Hold Special", new KeyboardButton(KeyboardKeys.RightShift));
+            Input.AddInput(PlayerToString[Jousters.Dischord] + "Hold Special", new KeyboardButton(KeyboardKeys.RightShift));
         }
 
         public static Microsoft.Xna.Framework.Vector2 GetMovement(Jousters player)

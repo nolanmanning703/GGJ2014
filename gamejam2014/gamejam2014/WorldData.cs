@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using gamejam2014.Jousting;
+using gamejam2014.Minigames;
 
 namespace gamejam2014
 {
     public enum ZoomLevels
     {
-        One,
+        One = 1,
         Two,
         Three,
         Four,
@@ -31,6 +32,11 @@ namespace gamejam2014
             { ZoomLevels.Four, 10.0f },
             { ZoomLevels.Five, 100.0f },
         };
+
+        public static int ZoomToInt(ZoomLevels zoom)
+        {
+            return (int)zoom;
+        }
 
         public static IEnumerable<ZoomLevels> AscendingZooms
         {
@@ -79,6 +85,18 @@ namespace gamejam2014
                 default: throw new NotImplementedException();
             }
         }
+        public static ZoomLevels ZoomInverse(ZoomLevels current)
+        {
+            switch (current)
+            {
+                case ZoomLevels.One: return ZoomLevels.Five;
+                case ZoomLevels.Two: return ZoomLevels.Four;
+                case ZoomLevels.Three: return ZoomLevels.Three;
+                case ZoomLevels.Four: return ZoomLevels.Two;
+                case ZoomLevels.Five: return ZoomLevels.One;
+                default: throw new NotImplementedException();
+            }
+        }
 
         public struct IntermediateZoom
         {
@@ -117,12 +135,56 @@ namespace gamejam2014
         
         public static Dictionary<ZoomLevels, Minigame> Minigames = new Dictionary<ZoomLevels, Minigame>()
         {
-            { ZoomLevels.One, null },
+            { ZoomLevels.One, new TestMinigame(ZoomLevels.One) },
             { ZoomLevels.Two, null },
             { ZoomLevels.Three, null },
             { ZoomLevels.Four, null },
             { ZoomLevels.Five, null },
         };
+
+
+        private static Dictionary<ZoomLevels, Dictionary<Jousters, Vector2>> StartingPoses = new Dictionary<ZoomLevels, Dictionary<Jousters, Vector2>>()
+        {
+            { ZoomLevels.One,
+              new Dictionary<Jousters, Vector2>()
+              {
+                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
+                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+              }
+            },
+            { ZoomLevels.Two,
+              new Dictionary<Jousters, Vector2>()
+              {
+                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
+                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+              }
+            },
+            { ZoomLevels.Three,
+              new Dictionary<Jousters, Vector2>()
+              {
+                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
+                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+              }
+            },
+            { ZoomLevels.Four,
+              new Dictionary<Jousters, Vector2>()
+              {
+                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
+                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+              }
+            },
+            { ZoomLevels.Five,
+              new Dictionary<Jousters, Vector2>()
+              {
+                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
+                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+              }
+            },
+        };
+        public static Vector2 GetStartingPos(ZoomLevels zoom, Jousters jouster)
+        {
+            return ZoomScaleAmount[zoom] * StartingPoses[zoom][jouster];
+        }
 
 
         public static void Initialize(Microsoft.Xna.Framework.Graphics.GraphicsDevice gd)

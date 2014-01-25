@@ -118,6 +118,7 @@
     <Compile Include="KarmaCamera.cs" />
     <Compile Include="KarmaWorld.cs" />
     <Compile Include="Minigames\Minigame.cs" />
+    <Compile Include="Minigames\TestMinigame.cs" />
     <Compile Include="PhysicsData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

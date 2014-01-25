@@ -23,7 +23,7 @@ namespace gamejam2014
         /// <summary>
         /// Minimum relative speeds necessary to register a collision between players for each minigame.
         /// </summary>
-        public static Dictionary<ZoomLevels, float> MinHitSpeeds = new Dictionary<ZoomLevels, float>()
+        private static Dictionary<ZoomLevels, float> MinHitSpeeds = new Dictionary<ZoomLevels, float>()
         {
             { ZoomLevels.One, 100.0f },
             { ZoomLevels.Two, 100.0f },

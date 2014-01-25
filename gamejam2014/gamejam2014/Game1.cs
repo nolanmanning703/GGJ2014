@@ -47,6 +47,7 @@ namespace gamejam2014
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Utilities.Graphics.TexturePrimitiveDrawer.MakeBlankDrawingTex(GraphicsDevice);
             WorldData.Initialize(GraphicsDevice);
             ArtAssets.Initialize(GraphicsDevice, Content);
 

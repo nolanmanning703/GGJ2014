@@ -24,12 +24,13 @@ namespace gamejam2014.Jousting
         /// </summary>
         public static CollisionData CheckCollision(Jouster first, Jouster second)
         {
+            //If the player aren't touching, exit.
+            if (!first.ColShape.Touches(second.ColShape)) return null;
             //If the players aren't moving fast enough relative to each other,
             //    exit.
             if ((first.Velocity - second.Velocity).LengthSquared() <
                 PhysicsData.GetMinHitSpeed(KarmaWorld.World.CurrentZoom) *
-                  PhysicsData.GetMinHitSpeed(KarmaWorld.World.CurrentZoom) ||
-                !first.ColShape.Touches(second.ColShape))
+                  PhysicsData.GetMinHitSpeed(KarmaWorld.World.CurrentZoom))
                 return null;
 
             CollisionData col = new CollisionData();
