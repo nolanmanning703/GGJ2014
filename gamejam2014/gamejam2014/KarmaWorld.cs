@@ -68,6 +68,10 @@ namespace gamejam2014
             }
         }
 
+        //Specials. Range from 0 to 1.
+        public float Special;
+        public bool IsSpecialFull { get { return Special >= 1.0f; } }
+
         //Minigame-specific stuff.
         public JousterPhysicsData PhysicsData { get { return gamejam2014.PhysicsData.JoustingMinigamePhysics[CurrentZoom]; } }
         public Minigame CurrentMinigame = null;
@@ -135,9 +139,41 @@ namespace gamejam2014
             GPSOne = GamePad.GetState(PlayerIndex.One);
             Input.Update(gt, KS, MS, GPSOne);
 
+            foreach (Utilities.Graphics.AnimatedSprite sprite in ArtAssets.SpecialUIAlert.Values)
+                sprite.UpdateAnimation(gt);
+
             if (Input.GetBoolInput("Zoom In").Value) CurrentZoom = WorldData.ZoomIn(CurrentZoom);
             if (Input.GetBoolInput("Zoom Out").Value) CurrentZoom = WorldData.ZoomOut(CurrentZoom);
 
+            if (Special == 1.0f)
+            {
+                if (Jousting.JoustingInput.IsPressingSpecial(Jousters.Harmony))
+                {
+                    CurrentMinigame.OnHarmonySpecial();
+                    Special = 0.0f;
+                }
+                else if (Jousting.JoustingInput.IsPressingSpecial(Jousters.Dischord))
+                {
+                    CurrentMinigame.OnDischordSpecial();
+                    Special = 0.0f;
+                }
+            }
+            else
+            {
+                if (Jousting.JoustingInput.IsPressingHoldSpecial(Jousters.Harmony) ||
+                    Jousting.JoustingInput.IsPressingHoldSpecial(Jousters.Dischord))
+                {
+                    if (Special < 1.0f)
+                        Special += (float)gt.ElapsedGameTime.TotalSeconds * WorldData.SpecialGainPerSecond.Random();
+                }
+                if (Special > 1.0f)
+                {
+                    Special = 1.0f;
+                    foreach (Utilities.Graphics.AnimatedSprite sprite in ArtAssets.SpecialUIAlert.Values)
+                        sprite.ResetAnimation(gt);
+                }
+            }
+            
 
             if (CurrentMinigame != null)
             {
@@ -180,13 +216,10 @@ namespace gamejam2014
 
             //Global HUD.
 
-            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
 
-            sb.DrawString(ArtAssets.DebugFont, WorldData.GetCurrentZoom(Camera.Zoom).ToString(), Vector2.Zero, Color.White);
-            sb.DrawString(ArtAssets.DebugFont, CurrentZoom.ToString() + ", " + Camera.ZoomData.MaxZoomSpeed, new Vector2(50.0f), Color.White);
-            
-            Vector2 mousePos = new Vector2(MS.X, MS.Y);
-            sb.DrawString(ArtAssets.DebugFont, Vector2.Transform(mousePos, CamTransformInverse).ToString(), mousePos, Color.White);
+            //sb.DrawString(ArtAssets.DebugFont, Special.ToString(), Vector2.Zero, Color.White);
+            ArtAssets.DrawSpecialBar(sb, Special, new Point(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight));
 
             sb.End();
         }

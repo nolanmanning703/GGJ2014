@@ -186,6 +186,7 @@ namespace gamejam2014
             return ZoomScaleAmount[zoom] * StartingPoses[zoom][jouster];
         }
 
+        public static Utilities.Math.Interval SpecialGainPerSecond = new Utilities.Math.Interval(0.05f, 0.15f, true, true, true, 4);
 
         public static void Initialize(Microsoft.Xna.Framework.Graphics.GraphicsDevice gd)
         {

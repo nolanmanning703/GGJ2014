@@ -31,7 +31,7 @@ namespace gamejam2014.Jousting
             Input.AddInput(PlayerToString[Jousters.Harmony] + "Movement", new FourArrowButton(KeyboardKeys.W, KeyboardKeys.S, KeyboardKeys.A, KeyboardKeys.D));
             Input.AddInput(PlayerToString[Jousters.Dischord] + "Movement", new FourArrowButton(KeyboardKeys.Up, KeyboardKeys.Down, KeyboardKeys.Left, KeyboardKeys.Right));
 
-            Input.AddInput(PlayerToString[Jousters.Harmony] + "Special", new KeyboardButton(KeyboardKeys.NumPad0));
+            Input.AddInput(PlayerToString[Jousters.Harmony] + "Special", new KeyboardButton(KeyboardKeys.End));
             Input.AddInput(PlayerToString[Jousters.Dischord] + "Special", new KeyboardButton(KeyboardKeys.Q));
 
             Input.AddInput(PlayerToString[Jousters.Harmony] + "Hold Special", new KeyboardButton(KeyboardKeys.LeftShift));

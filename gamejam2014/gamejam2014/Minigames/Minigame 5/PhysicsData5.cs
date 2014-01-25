@@ -18,7 +18,7 @@ namespace gamejam2014.Minigames.Minigame_5
         public static float BlackHolePushBack = 3000.0f;
 
         private static Interval BlackHolePullAccel = new Interval(100.0f, 500.0f, true, 5);
-        private static float BlackHoleDropoff = 1.0f;
+        private static float BlackHoleDropoff = 2.0f;
         public static float GetBlackHolePull(float distance, float zoomScale)
         {
             float minDist = GetBlackHole().Radius;

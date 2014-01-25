@@ -25,7 +25,7 @@ namespace gamejam2014.Minigames
         public ZoomLevels CurrentZoom;
 
         public Jouster Harmony, Dischord;
-        public List<Blocker> Blockers;
+        public List<Blocker> Blockers = new List<Blocker>();
 
         protected Utilities.Graphics.AnimatedSprite HarmonySprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Harmony]; } }
         protected Utilities.Graphics.AnimatedSprite DischordSprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Dischord]; } }
@@ -46,7 +46,7 @@ namespace gamejam2014.Minigames
             Dischord = new Jousting.Jouster(Jousting.Jousters.Dischord,
                                             WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Dischord),
                                             CurrentZoom);
-            Blockers = new List<Blocker>();
+            Blockers.Clear();
 
             Reset();
         }
@@ -66,12 +66,15 @@ namespace gamejam2014.Minigames
                 if (!UniqueBlockerSprites.Contains(Blockers[i].Sprite))
                     UniqueBlockerSprites.Add(Blockers[i].Sprite);
             }
+            //Blocker/Blocker and Blocker/Jouster collision.
             for (int i = 0; i < Blockers.Count; ++i)
             {
                 for (int j = i + 1; j < Blockers.Count; ++j)
                 {
                     Blocker.CheckCollision(Blockers[i], Blockers[j]);
                 }
+                Blocker.CheckCollision(Blockers[i], Harmony);
+                Blocker.CheckCollision(Blockers[i], Dischord);
             }
 
             //Update animation.
@@ -95,14 +98,14 @@ namespace gamejam2014.Minigames
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
 
-            HarmonySprite.Draw(Harmony.Pos, sb);
-            DischordSprite.Draw(Dischord.Pos, sb);
             for (int i = 0; i < Blockers.Count; ++i)
             {
                 Blockers[i].Sprite.DrawArgs.Scale *= scale;
                 Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
                 Blockers[i].Sprite.DrawArgs.Scale *= invScale;
             }
+            HarmonySprite.Draw(Harmony.Pos, sb);
+            DischordSprite.Draw(Dischord.Pos, sb);
 
             sb.End();
 
@@ -112,6 +115,14 @@ namespace gamejam2014.Minigames
             DrawAbovePlayers(sb);
         }
 
+        /// <summary>
+        /// Call this to activate Harmony's special.
+        /// </summary>
+        public abstract void OnHarmonySpecial();
+        /// <summary>
+        /// Call this to activate Dischord's special.
+        /// </summary>
+        public abstract void OnDischordSpecial();
 
         protected abstract void Reset();
         protected abstract void Update(Jousting.Jouster.CollisionData playerCollision);

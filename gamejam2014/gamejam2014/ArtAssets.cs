@@ -72,6 +72,12 @@ namespace gamejam2014
             },
         };
 
+        public static Dictionary<Jousting.Jousters, AnimatedSprite> SpecialUIAlert = new Dictionary<Jousting.Jousters, AnimatedSprite>()
+        {
+            { Jousting.Jousters.Harmony, null },
+            { Jousting.Jousters.Dischord, null },
+        };
+
         public static SpriteFont DebugFont, WorldFont;
 
         public static List<Vector2> GetJousterPolygon(ZoomLevels zoom)
@@ -145,8 +151,47 @@ namespace gamejam2014
                 }
             }
 
+            SpecialUIAlert[Jousting.Jousters.Harmony] = new AnimatedSprite(content.Load<Texture2D>("Art/Special H"));
+            SpecialUIAlert[Jousting.Jousters.Harmony].DrawArgs.Origin = new Vector2(0.0f, SpecialUIAlert[Jousting.Jousters.Harmony].ExactHeight);
+            SpecialUIAlert[Jousting.Jousters.Dischord] = new AnimatedSprite(content.Load<Texture2D>("Art/Special C"));
+            SpecialUIAlert[Jousting.Jousters.Dischord].DrawArgs.Origin = new Vector2(SpecialUIAlert[Jousting.Jousters.Dischord].ExactWidth,
+                                                                                     SpecialUIAlert[Jousting.Jousters.Dischord].ExactHeight);
+
             DebugFont = content.Load<SpriteFont>("DebugFont");
             WorldFont = content.Load<SpriteFont>("WorldFont");
+        }
+
+
+        public static void DrawSpecialBar(SpriteBatch sb, float specialAmount, Point windowSize)
+        {
+            Color backgroundCol = Color.Black;
+            backgroundCol.A = 175;
+
+            Color foregroundCol = Color.White;
+            foregroundCol.A = (byte)(255.0f *  specialAmount);
+
+            //Draw the background.
+            const int border = 50,
+                      height = 50;
+            Rectangle backgroundRect = new Rectangle(border, windowSize.Y - border - height,
+                                                     windowSize.X - (2 * border), height);
+            TexturePrimitiveDrawer.DrawRect(backgroundRect, sb, backgroundCol, 1);
+
+            //Draw the foreground.
+            const int border2 = 10;
+            Rectangle foregroundRect = new Rectangle(backgroundRect.X + border2, backgroundRect.Y + border2,
+                                                     (int)(specialAmount * (backgroundRect.Width - (2 * border2))), backgroundRect.Height - (2 * border2));
+            TexturePrimitiveDrawer.DrawRect(foregroundRect, sb, foregroundCol, 1);
+
+
+            //Draw the UI alerts if the special is ready.
+            if (specialAmount == 1.0f)
+            {
+                const float offsetX = border + 10.0f,
+                            offsetY = height + 10.0f;
+                SpecialUIAlert[Jousting.Jousters.Harmony].Draw(new Vector2(offsetX, windowSize.Y - offsetY), sb);
+                SpecialUIAlert[Jousting.Jousters.Dischord].Draw(new Vector2(windowSize.X - offsetX, windowSize.Y - offsetY), sb);
+            }
         }
     }
 }
