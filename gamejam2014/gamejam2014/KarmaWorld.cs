@@ -107,13 +107,13 @@ namespace gamejam2014
 
             CurrentTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
 
-            currentZoom = ZoomLevels.One;
+            currentZoom = ZoomLevels.Five;//Three
 
             Camera = new KarmaCamera(device);
             Camera.ZoomData.ZoomGivenDist = d => 1.0f / WorldData.ZoomScaleAmount[CurrentZoom];
-            Camera.Zoom = WorldData.ZoomScaleAmount[currentZoom];
+            Camera.Zoom = 1.0f / WorldData.ZoomScaleAmount[currentZoom];
 
-            CurrentZoom = ZoomLevels.One;//Three;
+            CurrentZoom = currentZoom;;
             foreach (ZoomLevels zooms in WorldData.AscendingZooms)
                 if (WorldData.Minigames[zooms] != null)
                     WorldData.Minigames[zooms].ResetGame();
@@ -161,23 +161,18 @@ namespace gamejam2014
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
-            //Backgrounds.
-
-            sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
+            //Minigames.
 
             foreach (ZoomLevels zoom in WorldData.DescendingZooms)
             {
+                sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
+
                 sb.Draw(ArtAssets.WorldBackgrounds[zoom], Vector2.Zero, null, Color.White, 0.0f,
                         ArtAssets.GetBackgroundOrigin(zoom), WorldData.ZoomScaleAmount[zoom], SpriteEffects.None,
                         ArtAssets.WorldBackgroundLayerMaxes[zoom]);
-            }
 
-            sb.End();
+                sb.End();
 
-
-            //Minigames.
-            foreach (ZoomLevels zoom in WorldData.DescendingZooms)
-            {
                 if (WorldData.Minigames[zoom] != null)
                     WorldData.Minigames[zoom].Draw(sb);
             }

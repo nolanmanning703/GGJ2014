@@ -63,9 +63,9 @@ namespace gamejam2014.Minigames
             float scale = WorldData.ZoomScaleAmount[CurrentZoom];
 
             HarmonySprite.DrawArgs.Rotation = Harmony.Rotation;
-            HarmonySprite.DrawArgs.Scale = new Microsoft.Xna.Framework.Vector2(scale, scale);
+            HarmonySprite.DrawArgs.Scale *= scale;
             DischordSprite.DrawArgs.Rotation = Dischord.Rotation;
-            DischordSprite.DrawArgs.Scale = new Microsoft.Xna.Framework.Vector2(scale, scale);
+            DischordSprite.DrawArgs.Scale *= scale;
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
             HarmonySprite.Draw(Harmony.Pos, sb);
@@ -75,6 +75,9 @@ namespace gamejam2014.Minigames
             //Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Harmony.ColShape, col, sb, 1);
             //Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Dischord.ColShape, col, sb, 1);
             sb.End();
+
+            HarmonySprite.DrawArgs.Scale /= scale;
+            DischordSprite.DrawArgs.Scale /= scale;
 
             DrawAbovePlayers(sb);
         }

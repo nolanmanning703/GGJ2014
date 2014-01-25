@@ -92,11 +92,26 @@ namespace gamejam2014.Jousting
 
         private bool touchingOtherJouster = false;
 
+        public class HurtEventArgs : EventArgs
+        {
+            public Jouster Enemy;
+            public float DamageDealt;
+            public HurtEventArgs(Jouster enemy, float damageDealt) { Enemy = enemy; DamageDealt = damageDealt; }
+        }
+        /// <summary>
+        /// Raised when this jouster is hurt by the other player.
+        /// </summary>
+        public event EventHandler<HurtEventArgs> OnHurtByEnemy;
+        /// <summary>
+        /// Raised when this jouster hurts the other player.
+        /// </summary>
+        public event EventHandler<HurtEventArgs> OnHurtEnemy;
+
 
         public Jouster(Jousters thisJouster, V2 pos)
             : base(new Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
                    ArtAssets.GetJousterPolygon(KarmaWorld.World.CurrentZoom).ToArray()),
-                   PhysData.Acceleration, PhysData.MaxSpeed)
+                   Single.PositiveInfinity, PhysData.MaxSpeed)
         {
             ThisJouster = thisJouster;
         }
@@ -158,8 +173,6 @@ namespace gamejam2014.Jousting
             //Keep physics up-to-date.
             MaxVelocity = PhysData.MaxSpeed;
             MaxRotSpeed = PhysData.TurnSpeed;
-            MaxAcceleration = PhysData.Acceleration;
-
 
             //Create friction.
             //If the friction this frame is strong enough to stop the player, manually stop him.
@@ -173,34 +186,37 @@ namespace gamejam2014.Jousting
             {
                 V2 vel = Velocity;
                 vel.Normalize();
-                Acceleration = -vel * PhysData.Friction;
+                Acceleration += -vel * PhysData.Friction;
             }
 
 
             //Update input.
             V2 movement = JoustingInput.GetMovement(ThisJouster);
-            RotVelocity = movement.X;
+            RotVelocity = PhysData.TurnSpeed * movement.X;
             if (movement.Y > 0.0f)
             {
-                Acceleration += UsefulMath.FindDirection(Rotation) * -MaxAcceleration;
+                Acceleration += UsefulMath.FindDirection(Rotation) * -PhysData.Acceleration;
             }
             else if (movement.Y < 0.0f)
             {
-                Acceleration += UsefulMath.FindDirection(Rotation) * MaxAcceleration;
+                Acceleration += UsefulMath.FindDirection(Rotation) * PhysData.Acceleration;
             }
 
 
             //Now update movement physics.
             base.Update(gt);
+            Acceleration = V2.Zero;
         }
 
         public void HurtBy(Jouster other, float stabDamage)
         {
             Velocity += PhysicsData.VelocityFromHit(stabDamage, UsefulMath.FindDirection(other.RotAcceleration));
+            if (OnHurtByEnemy != null) OnHurtByEnemy(this, new HurtEventArgs(other, stabDamage));
         }
         public void Hurt(Jouster other, float stabDamage)
         {
             Velocity *= PhysicsData.VelocityDampFromHit(stabDamage, MaxVelocity);
+            if (OnHurtEnemy != null) OnHurtEnemy(this, new HurtEventArgs(other, stabDamage));
         }
     }
 }

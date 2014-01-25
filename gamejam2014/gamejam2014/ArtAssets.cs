@@ -89,13 +89,41 @@ namespace gamejam2014
                         new Vector2(12.0f, 1.0f) * scale,
                     };
                 case ZoomLevels.Two:
-                    return null;
+                    return new List<Vector2>()
+                    {
+                        new Vector2(64.0f, 32.0f) * scale,
+                        new Vector2(12.0f, 63.0f) * scale,
+                        new Vector2(0.0f, 64.0f) * scale,
+                        new Vector2(0.0f, 0.0f) * scale,
+                        new Vector2(12.0f, 1.0f) * scale,
+                    };
                 case ZoomLevels.Three:
-                    return null;
+                    return new List<Vector2>()
+                    {
+                        new Vector2(64.0f, 32.0f) * scale,
+                        new Vector2(12.0f, 63.0f) * scale,
+                        new Vector2(0.0f, 64.0f) * scale,
+                        new Vector2(0.0f, 0.0f) * scale,
+                        new Vector2(12.0f, 1.0f) * scale,
+                    };
                 case ZoomLevels.Four:
-                    return null;
+                    return new List<Vector2>()
+                    {
+                        new Vector2(64.0f, 32.0f) * scale,
+                        new Vector2(12.0f, 63.0f) * scale,
+                        new Vector2(0.0f, 64.0f) * scale,
+                        new Vector2(0.0f, 0.0f) * scale,
+                        new Vector2(12.0f, 1.0f) * scale,
+                    };
                 case ZoomLevels.Five:
-                    return null;
+                    return new List<Vector2>()
+                    {
+                        new Vector2(64.0f, 32.0f) * scale,
+                        new Vector2(12.0f, 63.0f) * scale,
+                        new Vector2(0.0f, 64.0f) * scale,
+                        new Vector2(0.0f, 0.0f) * scale,
+                        new Vector2(12.0f, 1.0f) * scale,
+                    };
                 default: throw new NotImplementedException();
             }
         }

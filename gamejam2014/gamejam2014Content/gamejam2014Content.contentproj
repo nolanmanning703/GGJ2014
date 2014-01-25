@@ -69,6 +69,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Art\Z1 Art\" />
+    <Folder Include="Art\Z2 Art\" />
+    <Folder Include="Art\Z3 Art\" />
+    <Folder Include="Art\Z4 Art\" />
     <Folder Include="Sound\" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +134,13 @@
     </Compile>
     <Compile Include="Art\PlayerC 5.png">
       <Name>PlayerC 5</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Art\Z5 Art\Black Hole.png">
+      <Name>Black Hole</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

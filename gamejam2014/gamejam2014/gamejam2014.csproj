@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArtAssets.cs" />
+    <Compile Include="Jousting\Blocker.cs" />
     <Compile Include="Jousting\Jouster.cs" />
     <Compile Include="Jousting\JousterPhysicsData.cs" />
     <Compile Include="Jousting\JoustingInput.cs" />

@@ -139,7 +139,7 @@ namespace gamejam2014
             { ZoomLevels.Two, null },
             { ZoomLevels.Three, null },
             { ZoomLevels.Four, null },
-            { ZoomLevels.Five, null },
+            { ZoomLevels.Five, new Minigames.Minigame_5.Minigame5(ZoomLevels.Five) },
         };
 
 
