@@ -58,7 +58,9 @@ namespace gamejam2014.Jousting
         /// <summary>
         /// Whether or not this thing moves.
         /// </summary>
-        public bool IsMovable = false;
+        public bool IsMovable { get { return MaxVelocity > 0.0f; } }
+
+        public float Mass;
 
         public event EventHandler<Jousting.Jouster.BounceEventArgs> OnWallBounce;
         public event EventHandler<Jouster.HurtEventArgs> OnHitByJouster;
@@ -75,10 +77,11 @@ namespace gamejam2014.Jousting
 
         public Utilities.Graphics.AnimatedSprite Sprite;
 
-        public Blocker(Utilities.Graphics.AnimatedSprite sprite, Shape colShape, float maxSpeed = Single.PositiveInfinity)
+        public Blocker(Utilities.Graphics.AnimatedSprite sprite, Shape colShape, float maxSpeed = 0.0f, float mass = 1.0f)
             : base(colShape, Single.PositiveInfinity, maxSpeed)
         {
             Sprite = sprite;
+            Mass = mass;
         }
 
         protected override V2 ConstrainPosition(V2 input)
@@ -132,41 +135,68 @@ namespace gamejam2014.Jousting
             return input;
         }
 
-        public void OnHitJouster(Jouster other, float stabForce)
+        public override void Update(Microsoft.Xna.Framework.GameTime gt)
         {
-            if (OnHitByJouster != null) OnHitByJouster(this, new Jouster.HurtEventArgs(other, stabForce));
+            Acceleration /= Mass;
+            base.Update(gt);
+        }
 
-            //Dull the jouster's momentum, and push this one forward.
-            V2 newVel = other.Velocity * KarmaWorld.World.PhysicsData.BounceEnergyScale * PhysicsData.VelocityDampFromHit(stabForce, other.MaxVelocity);
-            V2 delta = other.Velocity - newVel;
-            other.Velocity = newVel;
-            Velocity += delta;
+        public void OnHitJouster(Jouster joust, float stabForce)
+        {
+            if (OnHitByJouster != null) OnHitByJouster(this, new Jouster.HurtEventArgs(joust, stabForce));
 
+            if (IsMovable)
+            {
+                //TODO: Fix.
+                //Dull the jouster's momentum, and push this Blocker forward.
+                V2 newVel = joust.Velocity * KarmaWorld.World.PhysicsData.BounceEnergyScale * PhysicsData.VelocityDampFromHit(stabForce, joust.MaxVelocity);
+                V2 delta = joust.Velocity - newVel;
+                joust.Velocity = newVel;
+                Velocity += delta;
+            }
+            else
+            {
+                //Push the jouster away from this Blocker.
+                V2 away = UsefulMath.FindDirection(Pos, joust.Pos);
+                Utilities.Conversions.ParallelPerp pp = Utilities.Conversions.SplitIntoComponents(joust.Velocity, away);
+                joust.Velocity = pp.Perpendicular + (KarmaWorld.World.PhysicsData.BounceEnergyScale * -pp.Parallel);
+            }
         }
         public void OnHitBlocker(Blocker other)
         {
+            //No hitting if both blockers don't move.
+            if (!IsMovable && !other.IsMovable) return;
+
+            //Raise collision events.
             if (OnHitByBlocker != null) OnHitByBlocker(this, new HitBlockerEventArgs(other));
             if (other.OnHitByBlocker != null) other.OnHitByBlocker(this, new HitBlockerEventArgs(this));
 
-            //Both entities keep the portion of momentum parallel to their tangent,
-            //But swap the portion of momentum perpendicular to their tangent.
+            //If both blockers are movable, react accordingly.
+            if (IsMovable && other.IsMovable)
+            {
+                //Define "tangent" as the line perpendicular to the line from one Blocker to the other.
+                //Both entities keep the portion of momentum parallel to their tangent,
+                //But swap the portion of momentum perpendicular to their tangent.
 
-            V2 thisMomentum = Velocity,
-               otherMomentum = other.Velocity;
+                V2 toOther = other.Pos - Pos;
+                V2 tangent = V2.Normalize(Utilities.Conversions.GetPerp(toOther));
 
-            V2 toOther = other.Pos - Pos;
-            V2 tangent = V2.Normalize(Utilities.Conversions.GetPerp(toOther));
+                Utilities.Conversions.ParallelPerp thisPP = Utilities.Conversions.SplitIntoComponents(Velocity, tangent),
+                                                   otherPP = Utilities.Conversions.SplitIntoComponents(other.Velocity, tangent);
 
-            Utilities.Conversions.ParallelPerp thisPP = Utilities.Conversions.SplitIntoComponents(thisMomentum, tangent),
-                                               otherPP = Utilities.Conversions.SplitIntoComponents(otherMomentum, tangent);
+                Velocity = thisPP.Parallel + (BounceVelocityDamp * otherPP.Perpendicular * other.Mass / Mass);
+                other.Velocity = otherPP.Parallel + (other.BounceVelocityDamp * thisPP.Perpendicular * Mass / other.Mass);
+            }
+            //Otherwise, one will bounce off.
+            else
+            {
+                Blocker movable = (IsMovable ? this : other);
+                Blocker nonMovable = (movable == this ? other : this);
 
-            V2 thisMomentumParallel = tangent * V2.Dot(thisMomentum, tangent),
-               otherMomentumParallel = tangent * V2.Dot(otherMomentum, tangent);
-            V2 thisMomentumPerpendicular = thisMomentum - thisMomentumParallel,
-               otherMomentumPerpendicular = otherMomentum - otherMomentumParallel;
-
-            Velocity = thisMomentumParallel + (BounceVelocityDamp * otherMomentumPerpendicular);
-            other.Velocity = otherMomentumParallel + (other.BounceVelocityDamp * thisMomentumPerpendicular);
+                V2 away = UsefulMath.FindDirection(nonMovable.Pos, movable.Pos);
+                Utilities.Conversions.ParallelPerp pp = Utilities.Conversions.SplitIntoComponents(movable.Velocity, away);
+                movable.Velocity = pp.Perpendicular + (movable.BounceVelocityDamp * -pp.Parallel);
+            }
         }
     }
 }
