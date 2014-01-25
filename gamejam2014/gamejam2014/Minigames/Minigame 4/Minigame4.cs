@@ -12,6 +12,7 @@ namespace gamejam2014.Minigames.Minigame_4
     {
         private int DiscordScore;
         private int HarmonyScore;
+        
 
         private List<String> BadStrings = new List<String>()
         {
@@ -32,7 +33,7 @@ namespace gamejam2014.Minigames.Minigame_4
         public Minigame4(ZoomLevels zoom)
             : base(zoom)
         {
-
+            Reset();
         }
 
         protected override void Update(Jousting.Jouster.CollisionData playerCollision)
