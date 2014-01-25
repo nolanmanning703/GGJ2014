@@ -70,10 +70,10 @@ namespace gamejam2014.Minigames
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
             HarmonySprite.Draw(Harmony.Pos, sb);
             DischordSprite.Draw(Dischord.Pos, sb);
-            Microsoft.Xna.Framework.Color col = Microsoft.Xna.Framework.Color.White;
-            col.A = 100;
-            Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Harmony.ColShape, col, sb, 1);
-            Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Dischord.ColShape, col, sb, 1);
+            //Microsoft.Xna.Framework.Color col = Microsoft.Xna.Framework.Color.White;
+            //col.A = 100;
+            //Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Harmony.ColShape, col, sb, 1);
+            //Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Dischord.ColShape, col, sb, 1);
             sb.End();
 
             DrawAbovePlayers(sb);

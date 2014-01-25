@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using gamejam2014.Jousting;
+using Utilities.Math;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace gamejam2014
 {
@@ -38,6 +40,16 @@ namespace gamejam2014
         {
             return WorldData.ZoomScaleAmount[zoom] *
                    MinHitSpeeds[zoom];
+        }
+
+        //Reacting to hits from other players.
+        public static Vector2 VelocityFromHit(float stabDamage, Vector2 hitDir)
+        {
+            return hitDir * stabDamage;
+        }
+        public static float VelocityDampFromHit(float stabDamage, float maxSpeed)
+        {
+            return new Interval(-0.5f, maxSpeed, true, 2).Map(Interval.ZeroToOneInterval, stabDamage);
         }
     }
 }

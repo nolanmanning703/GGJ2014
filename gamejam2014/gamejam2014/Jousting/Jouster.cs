@@ -25,13 +25,21 @@ namespace gamejam2014.Jousting
         public static CollisionData CheckCollision(Jouster first, Jouster second)
         {
             //If the player aren't touching, exit.
-            if (!first.ColShape.Touches(second.ColShape)) return null;
+            if (!first.ColShape.Touches(second.ColShape))
+            {
+                first.touchingOtherJouster = false;
+                second.touchingOtherJouster = false;
+                return null;
+            }
+            if (first.touchingOtherJouster || second.touchingOtherJouster) return null;
             //If the players aren't moving fast enough relative to each other,
             //    exit.
             if ((first.Velocity - second.Velocity).LengthSquared() <
                 PhysicsData.GetMinHitSpeed(KarmaWorld.World.CurrentZoom) *
                   PhysicsData.GetMinHitSpeed(KarmaWorld.World.CurrentZoom))
+            {
                 return null;
+            }
 
             CollisionData col = new CollisionData();
 
@@ -47,6 +55,20 @@ namespace gamejam2014.Jousting
 
             //If neither player really did damage, exit.
             if (col.StabStrength1 <= 0.0f && col.StabStrength2 <= 0.0f) return null;
+
+            first.touchingOtherJouster = true;
+            second.touchingOtherJouster = true;
+
+            if (col.StabStrength1 > col.StabStrength2)
+            {
+                first.Hurt(second, col.StabStrength1);
+                second.HurtBy(first, col.StabStrength1);
+            }
+            else
+            {
+                first.HurtBy(second, col.StabStrength2);
+                second.Hurt(first, col.StabStrength2);
+            }
 
             return col;
         }
@@ -67,6 +89,8 @@ namespace gamejam2014.Jousting
             public BounceEventArgs(BounceSide side) { Side = side; }
         }
         public event EventHandler<BounceEventArgs> OnWallBounce;
+
+        private bool touchingOtherJouster = false;
 
 
         public Jouster(Jousters thisJouster, V2 pos)
@@ -158,16 +182,25 @@ namespace gamejam2014.Jousting
             RotVelocity = movement.X;
             if (movement.Y > 0.0f)
             {
-                Acceleration += UsefulMath.FindDirection(Rotation) * MaxAcceleration;
+                Acceleration += UsefulMath.FindDirection(Rotation) * -MaxAcceleration;
             }
             else if (movement.Y < 0.0f)
             {
-                Acceleration += UsefulMath.FindDirection(Rotation) * -MaxAcceleration;
+                Acceleration += UsefulMath.FindDirection(Rotation) * MaxAcceleration;
             }
 
 
             //Now update movement physics.
             base.Update(gt);
+        }
+
+        public void HurtBy(Jouster other, float stabDamage)
+        {
+            Velocity += PhysicsData.VelocityFromHit(stabDamage, UsefulMath.FindDirection(other.RotAcceleration));
+        }
+        public void Hurt(Jouster other, float stabDamage)
+        {
+            Velocity *= PhysicsData.VelocityDampFromHit(stabDamage, MaxVelocity);
         }
     }
 }
