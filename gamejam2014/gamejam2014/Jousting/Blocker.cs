@@ -55,6 +55,10 @@ namespace gamejam2014.Jousting
         /// Velocity is scaled by this value after the blocker bounces off a wall or object.
         /// </summary>
         public float BounceVelocityDamp = 1.0f;
+        /// <summary>
+        /// Whether or not this thing moves.
+        /// </summary>
+        public bool IsMovable = false;
 
         public event EventHandler<Jousting.Jouster.BounceEventArgs> OnWallBounce;
         public event EventHandler<Jouster.HurtEventArgs> OnHitByJouster;
@@ -69,11 +73,12 @@ namespace gamejam2014.Jousting
         /// </summary>
         public event EventHandler<HitBlockerEventArgs> OnHitByBlocker;
 
+        public Utilities.Graphics.AnimatedSprite Sprite;
 
-        public Blocker(Shape colShape, float maxSpeed = Single.PositiveInfinity)
+        public Blocker(Utilities.Graphics.AnimatedSprite sprite, Shape colShape, float maxSpeed = Single.PositiveInfinity)
             : base(colShape, Single.PositiveInfinity, maxSpeed)
         {
-
+            Sprite = sprite;
         }
 
         protected override V2 ConstrainPosition(V2 input)
@@ -151,6 +156,9 @@ namespace gamejam2014.Jousting
 
             V2 toOther = other.Pos - Pos;
             V2 tangent = V2.Normalize(Utilities.Conversions.GetPerp(toOther));
+
+            Utilities.Conversions.ParallelPerp thisPP = Utilities.Conversions.SplitIntoComponents(thisMomentum, tangent),
+                                               otherPP = Utilities.Conversions.SplitIntoComponents(otherMomentum, tangent);
 
             V2 thisMomentumParallel = tangent * V2.Dot(thisMomentum, tangent),
                otherMomentumParallel = tangent * V2.Dot(otherMomentum, tangent);

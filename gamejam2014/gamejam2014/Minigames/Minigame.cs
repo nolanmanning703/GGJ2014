@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using gamejam2014.Jousting;
 
 namespace gamejam2014.Minigames
 {
@@ -23,10 +24,13 @@ namespace gamejam2014.Minigames
 
         public ZoomLevels CurrentZoom;
 
-        public Jousting.Jouster Harmony, Dischord;
+        public Jouster Harmony, Dischord;
+        public List<Blocker> Blockers;
 
         protected Utilities.Graphics.AnimatedSprite HarmonySprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Harmony]; } }
         protected Utilities.Graphics.AnimatedSprite DischordSprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Dischord]; } }
+
+        private List<Utilities.Graphics.AnimatedSprite> UniqueBlockerSprites = new List<Utilities.Graphics.AnimatedSprite>();
 
 
         public Minigame(ZoomLevels currentZoom) { CurrentZoom = currentZoom;  MoveUp = false; MoveDown = false; }
@@ -40,6 +44,7 @@ namespace gamejam2014.Minigames
                                            WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Harmony));
             Dischord = new Jousting.Jouster(Jousting.Jousters.Dischord,
                                             WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Dischord));
+            Blockers = new List<Blocker>();
 
             Reset();
         }
@@ -49,6 +54,23 @@ namespace gamejam2014.Minigames
             Harmony.Update(World.CurrentTime);
             Dischord.Update(World.CurrentTime);
             Jousting.Jouster.CollisionData colDat = Jousting.Jouster.CheckCollision(Harmony, Dischord);
+
+            //Update blockers.
+            UniqueBlockerSprites.Clear();
+            for (int i = 0; i < Blockers.Count; ++i)
+            {
+                Blockers[i].Update(World.CurrentTime);
+
+                if (!UniqueBlockerSprites.Contains(Blockers[i].Sprite))
+                    UniqueBlockerSprites.Add(Blockers[i].Sprite);
+            }
+            for (int i = 0; i < Blockers.Count; ++i)
+            {
+                for (int j = i + 1; j < Blockers.Count; ++j)
+                {
+                    Blocker.CheckCollision(Blockers[i], Blockers[j]);
+                }
+            }
 
             //Update animation.
             HarmonySprite.UpdateAnimation(World.CurrentTime);
@@ -61,7 +83,8 @@ namespace gamejam2014.Minigames
         {
             DrawBelowPlayers(sb);
 
-            float scale = WorldData.ZoomScaleAmount[CurrentZoom];
+            float scale = WorldData.ZoomScaleAmount[CurrentZoom],
+                  invScale = 1.0f / scale;
 
             HarmonySprite.DrawArgs.Rotation = Harmony.Rotation;
             HarmonySprite.DrawArgs.Scale *= scale;
@@ -69,16 +92,20 @@ namespace gamejam2014.Minigames
             DischordSprite.DrawArgs.Scale *= scale;
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
+
             HarmonySprite.Draw(Harmony.Pos, sb);
             DischordSprite.Draw(Dischord.Pos, sb);
-            //Microsoft.Xna.Framework.Color col = Microsoft.Xna.Framework.Color.White;
-            //col.A = 100;
-            //Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Harmony.ColShape, col, sb, 1);
-            //Utilities.Graphics.TexturePrimitiveDrawer.DrawShape(Dischord.ColShape, col, sb, 1);
+            for (int i = 0; i < Blockers.Count; ++i)
+            {
+                Blockers[i].Sprite.DrawArgs.Scale *= scale;
+                Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
+                Blockers[i].Sprite.DrawArgs.Scale *= invScale;
+            }
+
             sb.End();
 
-            HarmonySprite.DrawArgs.Scale /= scale;
-            DischordSprite.DrawArgs.Scale /= scale;
+            HarmonySprite.DrawArgs.Scale *= invScale;
+            DischordSprite.DrawArgs.Scale *= invScale;
 
             DrawAbovePlayers(sb);
         }
