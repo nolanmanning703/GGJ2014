@@ -32,6 +32,8 @@ namespace gamejam2014
             { ZoomLevels.One, 0.0f },
         };
 
+        public static SpriteFont DebugFont;
+
 
         public static void Initialize(GraphicsDevice gd, ContentManager content)
         {
@@ -40,6 +42,8 @@ namespace gamejam2014
             WorldBackgrounds[ZoomLevels.Three] = content.Load<Texture2D>("Art/Z3");
             WorldBackgrounds[ZoomLevels.Four] = content.Load<Texture2D>("Art/Z4");
             WorldBackgrounds[ZoomLevels.Five] = content.Load<Texture2D>("Art/Z5");
+
+            DebugFont = content.Load<SpriteFont>("DebugFont");
         }
     }
 }

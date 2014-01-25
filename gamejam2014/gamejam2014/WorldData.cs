@@ -25,10 +25,10 @@ namespace gamejam2014
         public static Dictionary<ZoomLevels, float> ZoomScaleAmount = new Dictionary<ZoomLevels, float>()
         {
             { ZoomLevels.One, 0.01f },
-            { ZoomLevels.Two, 1.0f },
-            { ZoomLevels.Three, 10.0f },
-            { ZoomLevels.Four, 100.0f },
-            { ZoomLevels.Five, 1000.0f },
+            { ZoomLevels.Two, 0.1f },
+            { ZoomLevels.Three, 1.0f },
+            { ZoomLevels.Four, 10.0f },
+            { ZoomLevels.Five, 100.0f },
         };
 
         public static IEnumerable<ZoomLevels> AscendingZooms
@@ -54,7 +54,7 @@ namespace gamejam2014
             }
         }
 
-        public static ZoomLevels ZoomIn(ZoomLevels current)
+        public static ZoomLevels ZoomOut(ZoomLevels current)
         {
             switch (current)
             {
@@ -66,7 +66,7 @@ namespace gamejam2014
                 default: throw new NotImplementedException();
             }
         }
-        public static ZoomLevels ZoomOut(ZoomLevels current)
+        public static ZoomLevels ZoomIn(ZoomLevels current)
         {
             switch (current)
             {
@@ -77,6 +77,40 @@ namespace gamejam2014
                 case ZoomLevels.One: return ZoomLevels.One;
                 default: throw new NotImplementedException();
             }
+        }
+
+        public struct IntermediateZoom
+        {
+            public ZoomLevels Inner, Outer;
+            /// <summary>
+            /// 0 = Inner, 1 = Outer
+            /// </summary>
+            public float LinearInterpolant;
+            public override string ToString()
+            {
+                return "[" + Inner.ToString() + "," + Outer.ToString() + "] : " + LinearInterpolant.ToString();
+            }
+        }
+        public static IntermediateZoom GetCurrentZoom(float zoomLevel)
+        {
+            foreach (ZoomLevels zoom in AscendingZooms)
+            {
+                ZoomLevels zoomOut = ZoomOut(zoom);
+                if (ZoomScaleAmount[zoom] <= zoomLevel &&
+                    ZoomScaleAmount[zoomOut] > zoomLevel)
+                {
+                    IntermediateZoom ret = new IntermediateZoom();
+                    ret.Inner = zoom;
+                    ret.Outer = zoomOut;
+                    //Use logarithmic interpolant.
+                    float lerpComponent = (zoomLevel - ZoomScaleAmount[zoom]) / (ZoomScaleAmount[zoomOut] - ZoomScaleAmount[zoom]);
+                    if (lerpComponent == 0.0f) ret.LinearInterpolant = 0.0f;
+                    else ret.LinearInterpolant = -(float)Math.Log(lerpComponent, 10.0f);
+                    return ret;
+                }
+            }
+
+            return new IntermediateZoom();
         }
 
 

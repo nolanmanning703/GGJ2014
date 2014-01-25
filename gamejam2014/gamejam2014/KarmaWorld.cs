@@ -115,6 +115,9 @@ namespace gamejam2014
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+            //World.
+
             sb.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, null, null, null, null, Camera.TransformMatrix);
 
             foreach (ZoomLevels zoom in WorldData.DescendingZooms)
@@ -127,7 +130,15 @@ namespace gamejam2014
             {
                 if (WorldData.Minigames[zoom] != null) WorldData.Minigames[zoom].Draw(sb);
             }
-            CurrentMinigame.Draw(sb);
+
+            sb.End();
+
+
+            //HUD.
+
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
+            sb.DrawString(ArtAssets.DebugFont, WorldData.GetCurrentZoom(Camera.Zoom).ToString(), Vector2.Zero, Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 1.0f);
 
             sb.End();
         }
