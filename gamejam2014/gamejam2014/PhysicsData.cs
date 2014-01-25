@@ -22,6 +22,15 @@ namespace gamejam2014
             { ZoomLevels.Five, new JousterPhysicsData(ZoomLevels.Five, 1000.0f, 4.0f, 450.0f, 150.0f, 0.85f) },
         };
 
+        public static Dictionary<ZoomLevels, float> JousterStartingMass = new Dictionary<ZoomLevels, float>()
+        {
+            { ZoomLevels.One, 1.0f },
+            { ZoomLevels.Two, 1.0f },
+            { ZoomLevels.Three, 1.0f },
+            { ZoomLevels.Four, 1.0f },
+            { ZoomLevels.Five, 1.0f },
+        };
+
         /// <summary>
         /// Minimum relative speeds necessary to register a collision between players for each minigame.
         /// </summary>

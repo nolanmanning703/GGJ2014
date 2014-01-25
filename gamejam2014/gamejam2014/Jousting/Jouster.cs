@@ -107,13 +107,16 @@ namespace gamejam2014.Jousting
         /// </summary>
         public event EventHandler<HurtEventArgs> OnHurtEnemy;
 
+        public float Mass;
 
-        public Jouster(Jousters thisJouster, V2 pos)
+
+        public Jouster(Jousters thisJouster, V2 pos, ZoomLevels zoom)
             : base(new Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
                    ArtAssets.GetJousterPolygon(KarmaWorld.World.CurrentZoom).ToArray()),
                    Single.PositiveInfinity, PhysData.MaxSpeed)
         {
             ThisJouster = thisJouster;
+            Mass = PhysicsData.JousterStartingMass[zoom];
         }
 
         protected override V2 ConstrainPosition(V2 input)
@@ -204,6 +207,7 @@ namespace gamejam2014.Jousting
 
 
             //Now update movement physics.
+            Acceleration /= Mass;
             base.Update(gt);
             Acceleration = V2.Zero;
         }

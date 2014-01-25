@@ -41,9 +41,11 @@ namespace gamejam2014.Minigames
             MoveDown = false;
 
             Harmony = new Jousting.Jouster(Jousting.Jousters.Harmony,
-                                           WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Harmony));
+                                           WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Harmony),
+                                           CurrentZoom);
             Dischord = new Jousting.Jouster(Jousting.Jousters.Dischord,
-                                            WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Dischord));
+                                            WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Dischord),
+                                            CurrentZoom);
             Blockers = new List<Blocker>();
 
             Reset();
