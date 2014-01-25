@@ -112,10 +112,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArtAssets.cs" />
+    <Compile Include="Jousting\Jouster.cs" />
     <Compile Include="Jousting\JousterPhysicsData.cs" />
+    <Compile Include="Jousting\JoustingInput.cs" />
     <Compile Include="KarmaCamera.cs" />
     <Compile Include="KarmaWorld.cs" />
     <Compile Include="Minigames\Minigame.cs" />
+    <Compile Include="PhysicsData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

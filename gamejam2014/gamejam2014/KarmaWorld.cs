@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Utilities.Input;
 using Utilities.Input.Buttons;
+using gamejam2014.Jousting;
 
 namespace gamejam2014
 {
@@ -13,23 +14,30 @@ namespace gamejam2014
     /// </summary>
     public class KarmaWorld
     {
-        //Keep a static reference to this world to simplify matters. After all, there's only ever one instance at a time.
+        //Keep a static reference to this world to simplify matters.
+        //After all, there's only ever one instance at a time.
         public static KarmaWorld World = null;
 
+        //Graphical stuff.
         public GraphicsDevice GraphicsDevice;
         public ContentManager ContentManager;
 
+        //Input stuff.
         public KeyboardState KS;
         public MouseState MS;
         public GamePadState GPSOne;
 
+        //System managers.
         public ButtonInputManager Input;
         public Utilities.TimerManager Timers;
 
+        //Timing.
         public GameTime CurrentTime;
 
+        //Camera.
         public KarmaCamera Camera;
 
+        //Zooming.
         private ZoomLevels currentZoom;
         public ZoomLevels CurrentZoom
         {
@@ -54,7 +62,28 @@ namespace gamejam2014
             }
         }
 
+        //Minigame-specific stuff.
+        public JousterPhysicsData PhysicsData { get { return WorldData.JoustingMinigamePhysics[CurrentZoom]; } }
         public Minigame CurrentMinigame = null;
+
+        //World dimensions.
+        public Vector2 WorldSize
+        {
+            get
+            {
+                return WorldData.ZoomScaleAmount[CurrentZoom] *
+                       new Vector2(ArtAssets.WorldBackgrounds[CurrentZoom].Width,
+                                   ArtAssets.WorldBackgrounds[CurrentZoom].Height);
+            }
+        }
+        public Utilities.Math.Shape.Rectangle WorldBounds
+        {
+            get
+            {
+                Vector2 halfSize = 0.5f * WorldSize;
+                return new Utilities.Math.Shape.Rectangle(-halfSize, halfSize);
+            }
+        }
 
 
         public KarmaWorld(GraphicsDevice device, ContentManager content)
@@ -80,6 +109,8 @@ namespace gamejam2014
 
             CurrentMinigame = WorldData.Minigames[CurrentZoom];
             if (CurrentMinigame != null) CurrentMinigame.ResetGame();
+
+            JoustingInput.InitializeInput();
         }
 
         public void Update(GameTime gt)

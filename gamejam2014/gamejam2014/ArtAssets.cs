@@ -34,6 +34,25 @@ namespace gamejam2014
 
         public static SpriteFont DebugFont;
 
+        public static List<Vector2> GetJousterPolygon(ZoomLevels zoom)
+        {
+            switch (zoom)
+            {
+                    //TODO: Fill.
+                case ZoomLevels.One:
+                    return null;
+                case ZoomLevels.Two:
+                    return null;
+                case ZoomLevels.Three:
+                    return null;
+                case ZoomLevels.Four:
+                    return null;
+                case ZoomLevels.Five:
+                    return null;
+                default: throw new NotImplementedException();
+            }
+        }
+
 
         public static void Initialize(GraphicsDevice gd, ContentManager content)
         {

@@ -43,15 +43,15 @@ namespace gamejam2014.Jousting
         }
         private float turnSpeed;
 
-        public float FrictionScale
+        public float Friction
         {
             get
             {
-                return frictionScale;
+                return WorldData.ZoomScaleAmount[ZoomLevel] * friction;
             }
-            set { frictionScale = value; }
+            set { friction = value; }
         }
-        private float frictionScale;
+        private float friction;
 
         public float EdgeBounceEnergyScale
         {
@@ -63,13 +63,13 @@ namespace gamejam2014.Jousting
         private float edgeBounceEnergyScale;
 
 
-        public JousterPhysicsData(ZoomLevels zoom, float maxSpeed, float turnSpd, float accel, float frictionScale, float edgeBounceEnergyScale)
+        public JousterPhysicsData(ZoomLevels zoom, float maxSpeed, float turnSpd, float accel, float friction, float edgeBounceEnergyScale)
         {
             ZoomLevel = zoom;
 
             this.maxSpeed = maxSpeed;
             acceleration = accel;
-            this.frictionScale = frictionScale;
+            this.friction = friction;
             turnSpeed = turnSpd;
             this.edgeBounceEnergyScale = edgeBounceEnergyScale;
         }

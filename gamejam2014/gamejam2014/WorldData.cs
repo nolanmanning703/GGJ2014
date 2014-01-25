@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using gamejam2014.Jousting;
 
 namespace gamejam2014
 {
@@ -113,7 +114,7 @@ namespace gamejam2014
             return new IntermediateZoom();
         }
 
-
+        
         public static Dictionary<ZoomLevels, Minigame> Minigames = new Dictionary<ZoomLevels, Minigame>()
         {
             { ZoomLevels.One, null },
