@@ -12,8 +12,9 @@ namespace gamejam2014.Minigames.Minigame_5
 
         public static void Initialize(GraphicsDevice device, ContentManager content)
         {
-            BlackHole = new AnimatedSprite(content.Load<Texture2D>("Art/Z5 Art/Black Hole"));
+            BlackHole = new AnimatedSprite(content.Load<Texture2D>("Art/Z5 Art/Black Hole"), 6, TimeSpan.FromSeconds(0.1), true);
             BlackHole.SetOriginToCenter();
+            BlackHole.StartAnimation();
         }
     }
 }

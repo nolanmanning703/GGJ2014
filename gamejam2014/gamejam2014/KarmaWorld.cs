@@ -80,7 +80,7 @@ namespace gamejam2014
                 if (CurrentMinigame != null) CurrentMinigame.ResetGame();
 
                 if (ZoomingIn) zoomTarget = GetCameraZoom(currentZoom);
-                else zoomTarget = GetCameraZoom(WorldData.ZoomOut(currentZoom));
+                else zoomTarget = GetCameraZoom(currentZoom);
                 zoomStart = Camera.Zoom;
                 zoomStartTime = (float)CurrentTime.TotalGameTime.TotalSeconds;
 
@@ -168,8 +168,8 @@ namespace gamejam2014
             if (ZoomingIn || ZoomingOut)
             {
                 if (WithinError(Camera.Zoom, zoomTarget,
-                                (ZoomingIn ? 0.01f * WorldData.ZoomScaleAmount[currentZoom] :
-                                             0.0000001f * WorldData.ZoomScaleAmount[currentZoom])))
+                                (ZoomingIn ? 0.01f / WorldData.ZoomScaleAmount[currentZoom] :
+                                             0.01f / WorldData.ZoomScaleAmount[currentZoom])))
                 {
                     Camera.Zoom = zoomTarget;
                     Camera.NonShakePos = Vector2.Zero;
@@ -182,41 +182,42 @@ namespace gamejam2014
             float deltaT = (float)gt.TotalGameTime.TotalSeconds - zoomStartTime;
             if (ZoomingIn)
             {
+                float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
+                if (progress < 0.0f || progress > 1.0f)
+                {
+                    Console.WriteLine(progress);
+                }
+
+                //Change position.
                 if (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five))
                 {
-                    float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
-                    if (progress < 0.0f || progress > 1.0f)
-                    {
-                        Console.WriteLine(progress);
-                    }
-
-                    //Change position.
-                    const double pow = 20.0;
+                    const double pow = 50.0;
                     Camera.NonShakePos = Vector2.Lerp(WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, Vector2.Zero, (float)Math.Pow(1.0f - progress, pow));
                     Camera.Pos = Camera.NonShakePos;
-
-                    //Change zoom.
-                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, deltaT * 0.025f);
                 }
+
+                //Change zoom.
+                Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, deltaT * 0.025f);
             }
             else if (ZoomingOut)
             {
+                float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
+                if (progress < 0.0f || progress > 1.0f)
+                {
+                    Console.WriteLine(progress);
+                }
+
+                //Change position.
                 if (CurrentZoom == ZoomLevels.Five)
                 {
-                    float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
-                    if (progress < 0.0f || progress > 1.0f)
-                    {
-                        Console.WriteLine(progress);
-                    }
 
-                    //Change position.
                     const double pow = 30.0;
                     Camera.NonShakePos = Vector2.Lerp(WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, Vector2.Zero, (float)Math.Pow(1.0f - progress, pow));
                     Camera.Pos = Camera.NonShakePos;
-
-                    //Change zoom.
-                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, deltaT * 0.025f);
                 }
+
+                //Change zoom.
+                Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, deltaT * 0.025f);
             }
 
             KS = Keyboard.GetState();

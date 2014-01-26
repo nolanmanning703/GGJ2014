@@ -8,7 +8,7 @@ namespace gamejam2014.Minigames.Minigame_5
 {
     public static class PhysicsData5
     {
-        private static Circle BlackHole = new Circle(V2.Zero, 135.0f);
+        private static Circle BlackHole = new Circle(V2.Zero, 100.0f);
         public static Circle GetBlackHole()
         {
             float scale = WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom];

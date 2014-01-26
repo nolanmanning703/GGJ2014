@@ -51,7 +51,7 @@ namespace gamejam2014.Minigames.Minigame_5
 
             }
 
-            ArtAssets5.BlackHole.UpdateAnimation(World.CurrentTime);
+            //ArtAssets5.BlackHole.UpdateAnimation(World.CurrentTime);
         }
 
         public override void OnHarmonySpecial()

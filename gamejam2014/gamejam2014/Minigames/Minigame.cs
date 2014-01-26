@@ -113,6 +113,10 @@ namespace gamejam2014.Minigames
             //Update animation.
             HarmonySprite.UpdateAnimation(World.CurrentTime);
             DischordSprite.UpdateAnimation(World.CurrentTime);
+            foreach (Utilities.Graphics.AnimatedSprite sprite in UniqueBlockerSprites)
+            {
+                sprite.UpdateAnimation(World.CurrentTime);
+            }
 
             //Update minigame logic.
             Update(colDat);
