@@ -63,7 +63,10 @@ namespace gamejam2014
 
             graphics.PreferredBackBufferWidth = ArtAssets.WorldBackgrounds[ZoomLevels.One].Width;
             graphics.PreferredBackBufferHeight = ArtAssets.WorldBackgrounds[ZoomLevels.One].Height;
+            Utilities.OtherFunctions.SetWindowCoords(new Point(0, 0), this, graphics);
             graphics.ApplyChanges();
+
+            Utilities.OtherFunctions.SetWindowCoords(new Point(0, 0), this, graphics);
 
             world = new KarmaWorld(GraphicsDevice, Content);
         }

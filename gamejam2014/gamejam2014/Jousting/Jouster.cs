@@ -61,11 +61,15 @@ namespace gamejam2014.Jousting
 
             if (col.StabStrength1 > col.StabStrength2)
             {
+                Console.WriteLine(col.StabStrength1 / WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
+
                 first.Hurt(second, col.StabStrength1);
                 second.HurtBy(first, col.StabStrength1);
             }
             else
             {
+                Console.WriteLine(col.StabStrength2 / WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
+
                 first.HurtBy(second, col.StabStrength2);
                 second.Hurt(first, col.StabStrength2);
             }
@@ -108,6 +112,7 @@ namespace gamejam2014.Jousting
         public event EventHandler<HurtEventArgs> OnHurtEnemy;
 
         public float Mass;
+        public float Health = 1.0f;
 
 
         public Jouster(Jousters thisJouster, V2 pos, ZoomLevels zoom)

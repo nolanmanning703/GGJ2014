@@ -7,9 +7,11 @@ namespace gamejam2014.Minigames.Minigame_1
 {
     public static class PhysicsData1
     {
-        public static float GoodBacteriaMass = 0.001f,
-                            InfectedBacteriaMass = 0.005f;
-        public static float BacteriaMassGiveToPlayerScale = 100.0f;
+        public static float GoodBacteriaMass = 0.2f,
+                            InfectedBacteriaMass = 0.1f;
+        public static float BacteriaMassGiveToPlayerScale = 1.0f;
+
+        public static float BacteriaInfectEnergyDamp = 0.1f;
 
         public static float BacteriaAppearanceTime = 5.0f;
 

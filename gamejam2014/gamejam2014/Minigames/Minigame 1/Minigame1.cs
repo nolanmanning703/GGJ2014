@@ -17,6 +17,26 @@ namespace gamejam2014.Minigames.Minigame_1
 
         }
 
+
+        /// <summary>
+        /// Resizes the given jouster by changing his mass by the given amount.
+        /// </summary>
+        private void ResizeJouster(float massChange, Jouster jouster)
+        {
+            jouster.Mass += massChange;
+
+            float scale = jouster.Mass / PhysicsData.JousterStartingMass[ZoomLevels.One];
+
+            ArtAssets.PlayerSprites[World.CurrentZoom][jouster.ThisJouster].DrawArgs.Scale = V2.One * scale;
+
+            V2 oldPos = jouster.Pos;
+            float oldRot = jouster.Rotation;
+            jouster.ColShape = new Utilities.Math.Shape.Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
+                                                                ArtAssets.GetJousterPolygon(ZoomLevels.One, scale * WorldData.ZoomScaleAmount[ZoomLevels.One]).ToArray());
+            jouster.Pos = oldPos;
+            jouster.Rotation = oldRot;
+        }
+
         /// <summary>
         /// Returns whether the given position is inside either Jouster or a Blocker.
         /// </summary>
@@ -42,22 +62,36 @@ namespace gamejam2014.Minigames.Minigame_1
                 pos.Y = yEnds.Random();
             }
 
-            Bacteria bact = new Bacteria(UsefulMath.RandomF() > 0.5f, pos, WorldData.ZoomScaleAmount[CurrentZoom]);
+            Bacteria bact = new Bacteria(pos, WorldData.ZoomScaleAmount[CurrentZoom]);
             bact.OnHitByJouster += (s, e) =>
                 {
                     Bacteria b = s as Bacteria;
                     if (b == null) return;
 
-                    e.Enemy.Mass += PhysicsData1.BacteriaMassGiveToPlayerScale * b.Mass;
-                    float scale = e.Enemy.Mass / PhysicsData.JousterStartingMass[ZoomLevels.One];
-                    ArtAssets.PlayerSprites[World.CurrentZoom][e.Enemy.ThisJouster].DrawArgs.Scale = V2.One * scale;
-                    V2 oldPos = e.Enemy.Pos;
-                    float oldRot = e.Enemy.Rotation;
-                    e.Enemy.ColShape = new Utilities.Math.Shape.Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
-                                                                        ArtAssets.GetJousterPolygon(ZoomLevels.One, scale * WorldData.ZoomScaleAmount[ZoomLevels.One]).ToArray());
-                    e.Enemy.Pos = oldPos;
-                    e.Enemy.Rotation = oldRot;
-                    KillBlocker(b);
+                    if (e.Enemy.ThisJouster == Jousters.Dischord)
+                    {
+                        if (!b.IsInfected) b.Infect(WorldData.ZoomScaleAmount[ZoomLevels.One]);
+                        e.Enemy.Velocity *= PhysicsData1.BacteriaInfectEnergyDamp;
+                    }
+                    else
+                    {
+                        if (b.IsInfected)
+                        {
+                            ResizeJouster(-PhysicsData1.BacteriaMassGiveToPlayerScale * b.Mass, e.Enemy);
+                        }
+                        else
+                        {
+                            ResizeJouster(PhysicsData1.BacteriaMassGiveToPlayerScale * b.Mass, e.Enemy);
+                        }
+                        if (e.Enemy.Mass <= 0.0f)
+                        {
+                            e.Enemy.Mass = 1.0f;
+                            MoveDown = true;
+                            return;
+                        }
+
+                        KillBlocker(b);
+                    }
                 };
 
             return bact;

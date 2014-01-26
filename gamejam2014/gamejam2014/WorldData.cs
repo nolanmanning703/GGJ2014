@@ -32,6 +32,7 @@ namespace gamejam2014
             { ZoomLevels.Four, 10.0f },
             { ZoomLevels.Five, 100.0f },
         };
+        public static float CameraZoomSpeedScale = 50.0f;
 
         public static int ZoomToInt(ZoomLevels zoom)
         {
@@ -42,10 +43,12 @@ namespace gamejam2014
         {
             get
             {
-                yield return ZoomLevels.One;
-                yield return ZoomLevels.Two;
-                yield return ZoomLevels.Three;
-                yield return ZoomLevels.Four;
+                ZoomLevels z = ZoomLevels.One;
+                while (z != ZoomLevels.Five)
+                {
+                    yield return z;
+                    z = ZoomOut(z);
+                }
                 yield return ZoomLevels.Five;
             }
         }
@@ -53,16 +56,28 @@ namespace gamejam2014
         {
             get
             {
-                yield return ZoomLevels.Five;
-                yield return ZoomLevels.Four;
-                yield return ZoomLevels.Three;
-                yield return ZoomLevels.Two;
+                ZoomLevels z = ZoomLevels.Five;
+                while (z != ZoomLevels.One)
+                {
+                    yield return z;
+                    z = ZoomIn(z);
+                }
                 yield return ZoomLevels.One;
             }
         }
 
         public static ZoomLevels ZoomOut(ZoomLevels current)
         {
+            switch (current)
+            {
+                case ZoomLevels.One: return ZoomLevels.Three;
+                case ZoomLevels.Two: return ZoomLevels.Three;
+                case ZoomLevels.Three: return ZoomLevels.Five;
+                case ZoomLevels.Four: return ZoomLevels.Five;
+                case ZoomLevels.Five: return ZoomLevels.Five;
+                default: throw new NotImplementedException();
+            }
+
             switch (current)
             {
                 case ZoomLevels.One: return ZoomLevels.Two;
@@ -75,6 +90,16 @@ namespace gamejam2014
         }
         public static ZoomLevels ZoomIn(ZoomLevels current)
         {
+            switch (current)
+            {
+                case ZoomLevels.Five: return ZoomLevels.Three;
+                case ZoomLevels.Four: return ZoomLevels.Three;
+                case ZoomLevels.Three: return ZoomLevels.One;
+                case ZoomLevels.Two: return ZoomLevels.One;
+                case ZoomLevels.One: return ZoomLevels.One;
+                default: throw new NotImplementedException();
+            }
+
             switch (current)
             {
                 case ZoomLevels.Five: return ZoomLevels.Four;

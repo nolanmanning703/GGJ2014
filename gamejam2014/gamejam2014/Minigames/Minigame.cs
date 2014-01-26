@@ -76,6 +76,15 @@ namespace gamejam2014.Minigames
             Dischord.Update(World.CurrentTime);
             Jousting.Jouster.CollisionData colDat = Jousting.Jouster.CheckCollision(Harmony, Dischord);
 
+            if (Harmony.Health <= 0.0f)
+            {
+                MoveDown = true;
+            }
+            if (Dischord.Health <= 0.0f)
+            {
+                MoveUp = true;
+            }
+
             //Remove dead blockers..
             foreach (Blocker b in ToRemove)
                 Blockers.Remove(b);

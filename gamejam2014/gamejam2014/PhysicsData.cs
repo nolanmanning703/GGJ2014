@@ -51,7 +51,9 @@ namespace gamejam2014
                    MinHitSpeeds[zoom];
         }
 
+
         //Reacting to hits from other players.
+
         public static Vector2 VelocityFromHit(float stabDamage, Vector2 hitDir)
         {
             return hitDir * stabDamage;
@@ -59,6 +61,13 @@ namespace gamejam2014
         public static float VelocityDampFromHit(float stabDamage, float maxSpeed)
         {
             return new Interval(-0.5f, maxSpeed, true, 2).Map(Interval.ZeroToOneInterval, stabDamage);
+        }
+
+        private static Interval RelativeHitDamageRange = new Interval(0.0f, 1000.0f, true, 1);
+        private static float MaxDamageFromHit = 0.5f;
+        public static float GetDamage(float stabStrength, float zoomScale)
+        {
+            return MaxDamageFromHit * RelativeHitDamageRange.Clamp(RelativeHitDamageRange.Map(Interval.ZeroToOneInterval, stabStrength / zoomScale));
         }
     }
 }
