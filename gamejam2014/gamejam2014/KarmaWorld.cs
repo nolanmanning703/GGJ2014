@@ -290,7 +290,8 @@ namespace gamejam2014
                 {
                     sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
 
-                    sb.Draw(ArtAssets.WorldBackgrounds[zoom], Vector2.Zero, null, Color.White, 0.0f,
+                    Color col = Color.White;
+                    sb.Draw(ArtAssets.WorldBackgrounds[zoom], Vector2.Zero, null, col, 0.0f,
                             ArtAssets.GetBackgroundOrigin(zoom), WorldData.ZoomScaleAmount[zoom], SpriteEffects.None,
                             ArtAssets.WorldBackgroundLayerMaxes[zoom]);
 

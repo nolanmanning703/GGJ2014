@@ -22,6 +22,11 @@ namespace gamejam2014.Minigames.Minigame_5
         protected override void Reset()
         {
             Blockers.Add(new Jousting.Blocker(ArtAssets5.BlackHole, PhysicsData5.GetBlackHole(), 0.0f, 1.0f));
+            Blockers[0].OnHitByJouster += (s, e) =>
+            {
+                e.Enemy.Velocity = WorldData.ZoomScaleAmount[World.CurrentZoom] * PhysicsData5.BlackHolePushBack * V2.Normalize(UsefulMath.FindDirection(e.Enemy.Pos, BlackHole.Pos, false));
+                e.Enemy.Health -= PhysicsData5.BlackHoleDamage;
+            };
             BlackHole = Blockers[0];
         }
 
@@ -33,14 +38,6 @@ namespace gamejam2014.Minigames.Minigame_5
 
             float scale = WorldData.ZoomScaleAmount[World.CurrentZoom];
 
-            if (blackHole.Touches(Harmony.ColShape))
-            {
-                Harmony.Velocity = scale * PhysicsData5.BlackHolePushBack * -V2.Normalize(harmonyToBH);
-            }
-            if (blackHole.Touches(Dischord.ColShape))
-            {
-                Dischord.Velocity = scale * PhysicsData5.BlackHolePushBack * -V2.Normalize(dischordToBH);
-            }
 
             Harmony.Acceleration = V2.Normalize(harmonyToBH) * PhysicsData5.GetBlackHolePull(harmonyToBH.Length(), scale);
             Dischord.Acceleration = V2.Normalize(dischordToBH) * PhysicsData5.GetBlackHolePull(dischordToBH.Length(), scale);
@@ -50,8 +47,12 @@ namespace gamejam2014.Minigames.Minigame_5
                                        PhysicsData5.GetBlackHolePull((blocker.Pos - blackHole.Center).Length(), scale);
 
             }
+        }
 
-            //ArtAssets5.BlackHole.UpdateAnimation(World.CurrentTime);
+        protected override void OnMinigameEnd()
+        {
+            Harmony.Rotation = 0.0f;
+            HarmonySprite.DrawArgs.Rotation = 0.0f;
         }
 
         public override void OnHarmonySpecial()

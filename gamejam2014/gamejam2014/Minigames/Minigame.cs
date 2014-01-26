@@ -120,6 +120,11 @@ namespace gamejam2014.Minigames
 
             //Update minigame logic.
             Update(colDat);
+
+            if (MoveUp || MoveDown)
+            {
+                OnMinigameEnd();
+            }
         }
         public void Draw(SpriteBatch sb)
         {
@@ -130,8 +135,12 @@ namespace gamejam2014.Minigames
 
             HarmonySprite.DrawArgs.Rotation = Harmony.Rotation;
             HarmonySprite.DrawArgs.Scale *= scale;
+            if (!MoveUp && !MoveDown) HarmonySprite.DrawArgs.Color = new Microsoft.Xna.Framework.Color(Harmony.Health, Harmony.Health, Harmony.Health);
+            else HarmonySprite.DrawArgs.Color = Microsoft.Xna.Framework.Color.White;
             DischordSprite.DrawArgs.Rotation = Dischord.Rotation;
             DischordSprite.DrawArgs.Scale *= scale;
+            if (!MoveUp && !MoveDown) DischordSprite.DrawArgs.Color = new Microsoft.Xna.Framework.Color(Dischord.Health, Dischord.Health, Dischord.Health);
+            else DischordSprite.DrawArgs.Color = Microsoft.Xna.Framework.Color.White;
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
 
@@ -168,6 +177,9 @@ namespace gamejam2014.Minigames
         /// Call this to activate Dischord's special.
         /// </summary>
         public abstract void OnDischordSpecial();
+
+
+        protected virtual void OnMinigameEnd() { }
 
         protected abstract void Reset();
         protected abstract void Update(Jousting.Jouster.CollisionData playerCollision);

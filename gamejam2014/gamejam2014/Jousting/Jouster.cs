@@ -220,7 +220,8 @@ namespace gamejam2014.Jousting
 
         public void HurtBy(Jouster other, float stabDamage)
         {
-            Velocity += PhysData.BounceEnergyScale * PhysicsData.VelocityFromHit(stabDamage, UsefulMath.FindDirection(other.RotAcceleration));
+            Health -= PhysicsData.GetDamage(stabDamage, WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
+            Velocity += PhysData.BounceEnergyScale * PhysicsData.VelocityFromHit(stabDamage, UsefulMath.FindDirection(other.Rotation));
             if (OnHurtByEnemy != null) OnHurtByEnemy(this, new HurtEventArgs(other, stabDamage));
         }
         public void Hurt(Jouster other, float stabDamage)

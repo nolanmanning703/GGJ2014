@@ -162,13 +162,17 @@ namespace gamejam2014
                 }
             }
 
-            SpecialUIAlert[Jousting.Jousters.Harmony] = new AnimatedSprite(content.Load<Texture2D>("Art/Special H"));
+            SpecialUIAlert[Jousting.Jousters.Harmony] = new AnimatedSprite(content.Load<Texture2D>("Art/Special H"), 4, TimeSpan.FromSeconds(0.02), true, -1, 1);
             SpecialUIAlert[Jousting.Jousters.Harmony].DrawArgs.Origin = new Vector2(0.0f, SpecialUIAlert[Jousting.Jousters.Harmony].ExactHeight);
             SpecialUIAlert[Jousting.Jousters.Harmony].DrawArgs.Scale *= 2.0f;
-            SpecialUIAlert[Jousting.Jousters.Dischord] = new AnimatedSprite(content.Load<Texture2D>("Art/Special C"));
+            SpecialUIAlert[Jousting.Jousters.Dischord] = new AnimatedSprite(content.Load<Texture2D>("Art/Special C"), 4, TimeSpan.FromSeconds(0.02), true, -1, 1);
             SpecialUIAlert[Jousting.Jousters.Dischord].DrawArgs.Origin = new Vector2(SpecialUIAlert[Jousting.Jousters.Dischord].ExactWidth,
                                                                                      SpecialUIAlert[Jousting.Jousters.Dischord].ExactHeight);
             SpecialUIAlert[Jousting.Jousters.Dischord].DrawArgs.Scale *= 2.0f;
+
+
+            SpecialUIAlert[Jousting.Jousters.Harmony].StartAnimation();
+            SpecialUIAlert[Jousting.Jousters.Dischord].StartAnimation();
 
             DebugFont = content.Load<SpriteFont>("DebugFont");
             WorldFont = content.Load<SpriteFont>("WorldFont");

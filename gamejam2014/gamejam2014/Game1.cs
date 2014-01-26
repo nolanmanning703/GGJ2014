@@ -21,6 +21,10 @@ namespace gamejam2014
 
         KarmaWorld world;
 
+        private bool paused = false;
+        private bool escapeDown = false;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -87,7 +91,25 @@ namespace gamejam2014
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            world.Update(gameTime);
+            if (paused)
+            {
+                world.KS = Keyboard.GetState();
+            }
+            else
+            {
+                world.Update(gameTime);
+            }
+
+
+            if (world.KS.IsKeyDown(Keys.Escape))
+            {
+                if (!escapeDown)
+                {
+                    paused = !paused;
+                    escapeDown = true;
+                }
+            }
+            else escapeDown = false;
 
             base.Update(gameTime);
         }
@@ -99,6 +121,14 @@ namespace gamejam2014
         protected override void Draw(GameTime gameTime)
         {
             world.Draw(gameTime, spriteBatch);
+
+            if (paused)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+                Utilities.Graphics.TexturePrimitiveDrawer.DrawRect(new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), spriteBatch, new Color(0, 0, 0, 128), 1);
+                spriteBatch.DrawString(ArtAssets.WorldFont, "Paused", new Vector2(graphics.PreferredBackBufferWidth * 0.5f, graphics.PreferredBackBufferHeight * 0.5f), Color.White);
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }
