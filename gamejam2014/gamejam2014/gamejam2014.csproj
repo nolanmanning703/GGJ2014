@@ -124,6 +124,7 @@
     <Compile Include="Minigames\Minigame 1\ArtAssets1.cs" />
     <Compile Include="Minigames\Minigame 1\Bacteria.cs" />
     <Compile Include="Minigames\Minigame 1\Minigame1.cs" />
+    <Compile Include="Minigames\Minigame 1\ParticleAssets1.cs" />
     <Compile Include="Minigames\Minigame 1\PhysicsData1.cs" />
     <Compile Include="Minigames\Minigame 1\SoundAssets1.cs" />
     <Compile Include="Minigames\Minigame 2\ArtAssets2.cs" />

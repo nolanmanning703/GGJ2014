@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -159,10 +160,10 @@ namespace gamejam2014
 
         public void Update(GameTime gt)
         {
-            CurrentTime = gt;
-
             if (KS.IsKeyDown(Keys.G)) Special = 1.0f;
 
+
+            CurrentTime = gt;
 
             Timers.Update(gt);
 

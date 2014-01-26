@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Utilities;
+using Utilities.Graphics;
 using gamejam2014.Jousting;
+using V2 = Microsoft.Xna.Framework.Vector2;
 
 namespace gamejam2014.Minigames
 {
@@ -30,6 +32,7 @@ namespace gamejam2014.Minigames
         private List<Blocker> ToRemove = new List<Blocker>();
 
         public TimerManager Timers = new TimerManager();
+        public Utilities.Graphics.ParticleEffect AlphaParticles, AdditiveParticles;
 
         public float TimeSinceMinigameStart { get; private set; }
 
@@ -70,6 +73,9 @@ namespace gamejam2014.Minigames
 
         public void ResetGame()
         {
+            AlphaParticles = new Utilities.Graphics.ParticleEffect(ArtAssets.EmptySprite, V2.Zero, new List<Utilities.Graphics.ParticleEffect.Particle>());
+            AdditiveParticles = new Utilities.Graphics.ParticleEffect(ArtAssets.EmptySprite, V2.Zero, new List<Utilities.Graphics.ParticleEffect.Particle>());
+
             MoveUp = false;
             MoveDown = false;
 
@@ -88,6 +94,9 @@ namespace gamejam2014.Minigames
         }
         public void UpdateGame()
         {
+            AlphaParticles.Update(World.CurrentTime);
+            AdditiveParticles.Update(World.CurrentTime);
+
             Timers.Update(World.CurrentTime);
             TimeSinceMinigameStart += (float)World.CurrentTime.ElapsedGameTime.TotalSeconds;
 
@@ -166,22 +175,28 @@ namespace gamejam2014.Minigames
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
 
             for (int i = 0; i < Blockers.Count; ++i) if (!Blockers[i].IsAbovePlayer)
-            {
-                Blockers[i].Sprite.DrawArgs.Scale *= scale;
-                Blockers[i].Sprite.DrawArgs.Rotation = Blockers[i].Rotation;
-                Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
-                Blockers[i].Sprite.DrawArgs.Scale *= invScale;
-            }
+                {
+                    Blockers[i].Sprite.DrawArgs.Scale *= scale;
+                    Blockers[i].Sprite.DrawArgs.Rotation = Blockers[i].Rotation;
+                    Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
+                    Blockers[i].Sprite.DrawArgs.Scale *= invScale;
+                }
             HarmonySprite.Draw(Harmony.Pos, sb);
             DischordSprite.Draw(Dischord.Pos, sb);
             for (int i = 0; i < Blockers.Count; ++i) if (Blockers[i].IsAbovePlayer)
-            {
-                Blockers[i].Sprite.DrawArgs.Scale *= scale;
-                Blockers[i].Sprite.DrawArgs.Rotation = Blockers[i].Rotation;
-                Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
-                Blockers[i].Sprite.DrawArgs.Scale *= invScale;
-            }
+                {
+                    Blockers[i].Sprite.DrawArgs.Scale *= scale;
+                    Blockers[i].Sprite.DrawArgs.Rotation = Blockers[i].Rotation;
+                    Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
+                    Blockers[i].Sprite.DrawArgs.Scale *= invScale;
+                }
 
+            AlphaParticles.Draw(sb);
+
+            sb.End();
+
+            sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, World.CamTransform);
+            AdditiveParticles.Draw(sb);
             sb.End();
 
             HarmonySprite.DrawArgs.Scale *= invScale;

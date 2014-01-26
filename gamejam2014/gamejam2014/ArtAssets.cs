@@ -16,6 +16,9 @@ namespace gamejam2014
     /// </summary>
     public static class ArtAssets
     {
+        public static AnimatedSprite EmptySprite;
+
+
         public static Dictionary<ZoomLevels, Texture2D> WorldBackgrounds = new Dictionary<ZoomLevels, Texture2D>()
         {
             { ZoomLevels.One, null },
@@ -124,6 +127,8 @@ namespace gamejam2014
 
         public static void Initialize(GraphicsDevice gd, ContentManager content)
         {
+            EmptySprite = AnimatedSprite.Empty(gd);
+
             foreach (ZoomLevels zoom in WorldData.AscendingZooms)
             {
                 string zoomS = WorldData.ZoomToInt(zoom).ToString();

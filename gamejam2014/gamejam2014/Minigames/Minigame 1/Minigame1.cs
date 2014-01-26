@@ -69,11 +69,16 @@ namespace gamejam2014.Minigames.Minigame_1
 
                     if (e.Enemy.ThisJouster == Jousters.Dischord)
                     {
-                        if (!b.IsInfected) b.Infect(WorldData.ZoomScaleAmount[ZoomLevels.One]);
+                        if (!b.IsInfected)
+                        {
+                            b.Infect(WorldData.ZoomScaleAmount[ZoomLevels.One]);
+                        }
                         e.Enemy.Velocity *= PhysicsData1.BacteriaInfectEnergyDamp;
                     }
                     else
                     {
+                        AlphaParticles.Merge(ParticleAssets1.GetCollectionParticles(World.CurrentTime, b.Pos, b.IsInfected));
+
                         if (b.IsInfected)
                         {
                             ResizeJouster(-PhysicsData1.BacteriaMassGiveToPlayerScale * b.Mass, e.Enemy);

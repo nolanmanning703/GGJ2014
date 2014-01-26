@@ -12,6 +12,8 @@ namespace gamejam2014.Minigames.Minigame_1
     {
         public bool IsInfected { get; private set; }
 
+        private float timeSinceParticles = 0.0f;
+
         public Bacteria(Microsoft.Xna.Framework.Vector2 pos, float zoomScale)
             : base(ArtAssets1.GoodBacteria, ArtAssets1.GoodBacteriaShape(pos, zoomScale), false, Single.PositiveInfinity, PhysicsData1.GoodBacteriaMass)
         {
@@ -28,15 +30,45 @@ namespace gamejam2014.Minigames.Minigame_1
 
         public void Infect(float zoomScale)
         {
-            IsInfected = true;
+            if (!IsInfected)
+            {
+                WorldData.Minigames[ZoomLevels.One].AdditiveParticles.Merge(ParticleAssets1.GetInfectParticles(KarmaWorld.World.CurrentTime, Pos));
 
-            Sprite = ArtAssets1.InfectedBacteria;
+                IsInfected = true;
 
-            float rot = Rotation;
-            ColShape = ArtAssets1.InfectedBacteriaShape(Pos, zoomScale);
-            Rotation = rot;
+                Sprite = ArtAssets1.InfectedBacteria;
 
-            Mass = PhysicsData1.InfectedBacteriaMass;
+                float rot = Rotation;
+                ColShape = ArtAssets1.InfectedBacteriaShape(Pos, zoomScale);
+                Rotation = rot;
+
+                Mass = PhysicsData1.InfectedBacteriaMass;
+            }
+        }
+
+        public override void Update(Microsoft.Xna.Framework.GameTime gt)
+        {
+            if (IsInfected)
+            {
+                if (timeSinceParticles > ParticleAssets1.BadParticleSpawnInterval)
+                {
+                    timeSinceParticles = 0.0f;
+                    WorldData.Minigames[ZoomLevels.One].AlphaParticles.Merge(ParticleAssets1.GetBacteriaParticles(gt, Pos, true));
+                }
+            }
+            else
+            {
+                if (timeSinceParticles > ParticleAssets1.GoodParticleSpawnInterval)
+                {
+                    timeSinceParticles = 0.0f;
+                    WorldData.Minigames[ZoomLevels.One].AlphaParticles.Merge(ParticleAssets1.GetBacteriaParticles(gt, Pos, false));
+                }
+            }
+
+
+            timeSinceParticles += (float)gt.ElapsedGameTime.TotalSeconds;
+
+            base.Update(gt);
         }
     }
 }
