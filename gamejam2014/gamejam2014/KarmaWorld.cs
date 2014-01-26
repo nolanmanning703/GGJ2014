@@ -250,7 +250,7 @@ namespace gamejam2014
             bool five = false;
             float oldZoom = Camera.Zoom;
             Vector2 pos = Camera.Position, targ = Camera.CamTarget, posit = Camera.Position;
-            if (CurrentZoom == ZoomLevels.Five || (CurrentZoom == ZoomLevels.Four && ZoomingIn))
+            if (CurrentZoom == ZoomLevels.Five || (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && ZoomingIn))
             {
                 five = true;
 
@@ -338,7 +338,7 @@ namespace gamejam2014
             }
             #endregion
 
-            if (CurrentZoom == ZoomLevels.Five)
+            if (CurrentZoom == ZoomLevels.Five || (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && ZoomingIn))
             {
                 sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
                 sb.Draw(ArtAssets.WorldBackgrounds[ZoomLevels.Five], Vector2.Zero, null, Color.White, 0.0f,
