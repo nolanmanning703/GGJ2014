@@ -132,6 +132,7 @@
     <Compile Include="Minigames\Minigame 2\SoundAssets2.cs" />
     <Compile Include="Minigames\Minigame 3\ArtAssets3.cs" />
     <Compile Include="Minigames\Minigame 3\Minigame3.cs" />
+    <Compile Include="Minigames\Minigame 3\ParticleAssets3.cs" />
     <Compile Include="Minigames\Minigame 3\PhysicsData3.cs" />
     <Compile Include="Minigames\Minigame 3\SoundAssets3.cs" />
     <Compile Include="Minigames\Minigame 4\ArtAssets4.cs">
@@ -142,6 +143,7 @@
     <Compile Include="Minigames\Minigame 4\SoundAssets4.cs" />
     <Compile Include="Minigames\Minigame 5\ArtAssets5.cs" />
     <Compile Include="Minigames\Minigame 5\Minigame5.cs" />
+    <Compile Include="Minigames\Minigame 5\ParticleAssets5.cs" />
     <Compile Include="Minigames\Minigame 5\PhysicsData5.cs" />
     <Compile Include="Minigames\Minigame 5\SoundAssets5.cs" />
     <Compile Include="Minigames\Minigame.cs" />

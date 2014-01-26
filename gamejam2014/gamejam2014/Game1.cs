@@ -65,6 +65,8 @@ namespace gamejam2014
             Minigames.Minigame_4.SoundAssets4.Initialize(Content);
             Minigames.Minigame_5.SoundAssets5.Initialize(Content);
             Minigames.Minigame_1.ParticleAssets1.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_3.ParticleAssets3.Initialize(GraphicsDevice, Content);
+            Minigames.Minigame_5.ParticleAssets5.Initialize(GraphicsDevice, Content);
 
             graphics.PreferredBackBufferWidth = ArtAssets.WorldBackgrounds[ZoomLevels.One].Width;
             graphics.PreferredBackBufferHeight = ArtAssets.WorldBackgrounds[ZoomLevels.One].Height;

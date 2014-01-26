@@ -210,11 +210,11 @@ namespace gamejam2014.Jousting
                 RotVelocity = PhysData.TurnSpeed * movement.X;
                 if (movement.Y > 0.0f)
                 {
-                    Acceleration += UsefulMath.FindDirection(Rotation) * -PhysData.Acceleration;
+                    Acceleration += UsefulMath.FindDirection(Rotation) * PhysData.Acceleration;
                 }
                 else if (movement.Y < 0.0f)
                 {
-                    Acceleration += UsefulMath.FindDirection(Rotation) * PhysData.Acceleration;
+                    Acceleration += UsefulMath.FindDirection(Rotation) * -PhysData.Acceleration;
                 }
             }
 
