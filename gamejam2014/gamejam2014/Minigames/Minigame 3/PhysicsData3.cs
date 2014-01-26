@@ -13,5 +13,7 @@ namespace gamejam2014.Minigames.Minigame_3
         public static Circle GetHillCircle(float zoomScale) { return new Circle(HillCenter * zoomScale, ArtAssets3.HillRadius * zoomScale); }
 
         public static float TimeInHillToWin = 60.0f;
+
+        public static float SpecialStunTime = 6.5f;
     }
 }

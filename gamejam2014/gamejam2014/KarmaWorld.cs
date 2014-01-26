@@ -246,7 +246,7 @@ namespace gamejam2014
             }
             else
             {
-                if (Jousting.JoustingInput.IsPressingHoldSpecial(Jousters.Harmony) ||
+                if (Jousting.JoustingInput.IsPressingHoldSpecial(Jousters.Harmony) &&
                     Jousting.JoustingInput.IsPressingHoldSpecial(Jousters.Dischord))
                 {
                     if (Special < 1.0f)

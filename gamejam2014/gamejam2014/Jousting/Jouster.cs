@@ -114,6 +114,10 @@ namespace gamejam2014.Jousting
         public float Mass;
         public float Health = 1.0f;
 
+        //Abilities.
+        public bool IsSpiky_Aura = false;
+        public bool IsStunned = false;
+
 
         public Jouster(Jousters thisJouster, V2 pos, ZoomLevels zoom)
             : base(new Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
@@ -200,15 +204,18 @@ namespace gamejam2014.Jousting
 
 
             //Update input.
-            V2 movement = JoustingInput.GetMovement(ThisJouster);
-            RotVelocity = PhysData.TurnSpeed * movement.X;
-            if (movement.Y > 0.0f)
+            if (!IsStunned)
             {
-                Acceleration += UsefulMath.FindDirection(Rotation) * -PhysData.Acceleration;
-            }
-            else if (movement.Y < 0.0f)
-            {
-                Acceleration += UsefulMath.FindDirection(Rotation) * PhysData.Acceleration;
+                V2 movement = JoustingInput.GetMovement(ThisJouster);
+                RotVelocity = PhysData.TurnSpeed * movement.X;
+                if (movement.Y > 0.0f)
+                {
+                    Acceleration += UsefulMath.FindDirection(Rotation) * -PhysData.Acceleration;
+                }
+                else if (movement.Y < 0.0f)
+                {
+                    Acceleration += UsefulMath.FindDirection(Rotation) * PhysData.Acceleration;
+                }
             }
 
 

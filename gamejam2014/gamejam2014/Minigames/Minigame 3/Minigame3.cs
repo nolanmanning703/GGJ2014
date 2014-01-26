@@ -44,15 +44,30 @@ namespace gamejam2014.Minigames.Minigame_3
             }
 
             ArtAssets3.HillSprite.UpdateAnimation(World.CurrentTime);
+            ArtAssets3.ConfusedSprite.UpdateAnimation(World.CurrentTime);
         }
 
         public override void OnHarmonySpecial()
         {
-            throw new NotImplementedException();
+            Dischord.IsStunned = true;
+
+            Utilities.IntervalCounter counter = new Utilities.IntervalCounter(TimeSpan.FromSeconds(PhysicsData3.SpecialStunTime));
+            counter.IntervalTrigger += (s, e) =>
+                {
+                    Dischord.IsStunned = false;
+                };
+            World.Timers.AddTimerNextUpdate(counter, true);
         }
         public override void OnDischordSpecial()
         {
-            throw new NotImplementedException();
+            Harmony.IsStunned = true;
+
+            Utilities.IntervalCounter counter = new Utilities.IntervalCounter(TimeSpan.FromSeconds(PhysicsData3.SpecialStunTime));
+            counter.IntervalTrigger += (s, e) =>
+            {
+                Harmony.IsStunned = false;
+            };
+            World.Timers.AddTimerNextUpdate(counter, true);
         }
 
         protected override void DrawBelowPlayers(SpriteBatch sb)
@@ -68,6 +83,14 @@ namespace gamejam2014.Minigames.Minigame_3
         protected override void DrawAbovePlayers(SpriteBatch sb)
         {
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
+            if (Harmony.IsStunned)
+            {
+                ArtAssets3.ConfusedSprite.Draw(Harmony.Pos, sb);
+            }
+            if (Dischord.IsStunned)
+            {
+                ArtAssets3.ConfusedSprite.Draw(Dischord.Pos, sb);
+            }
             ArtAssets3.DrawHillTimeBar(Harmony.Pos, TimeInHill, sb);
             sb.End();
         }

@@ -25,12 +25,17 @@ namespace gamejam2014.Minigames.Minigame_3
 
         public static AnimatedSprite HillSprite;
         public static AnimatedSprite DogHouseSprite;
+        public static AnimatedSprite ConfusedSprite;
 
         public static void Initialize(GraphicsDevice device, ContentManager content)
         {
             HillSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/Hill"), 4, TimeSpan.FromSeconds(0.05), true, -1, 1);
             HillSprite.SetOriginToCenter();
             HillSprite.StartAnimation();
+
+            ConfusedSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/Stunned"), 2, TimeSpan.FromSeconds(0.25), true, -1, 0);
+            ConfusedSprite.SetOriginToCenter();
+            ConfusedSprite.StartAnimation();
         }
 
         public static void DrawHillTimeBar(V2 playerPos, float playerTimeInHill, SpriteBatch sb)
