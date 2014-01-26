@@ -120,6 +120,7 @@ namespace gamejam2014.Jousting
                    ArtAssets.GetJousterPolygon(KarmaWorld.World.CurrentZoom, WorldData.ZoomScaleAmount[zoom]).ToArray()),
                    Single.PositiveInfinity, PhysData.MaxSpeed)
         {
+            Pos = pos;
             ThisJouster = thisJouster;
             Mass = PhysicsData.JousterStartingMass[zoom];
         }

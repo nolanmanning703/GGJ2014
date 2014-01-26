@@ -32,7 +32,7 @@ namespace gamejam2014
             { ZoomLevels.Four, 10.0f },
             { ZoomLevels.Five, 100.0f },
         };
-        public static float CameraZoomSpeedScale = 15.0f;
+        public static float CameraZoomSpeedScale = 25.0f;
 
         public static int ZoomToInt(ZoomLevels zoom)
         {
@@ -149,7 +149,7 @@ namespace gamejam2014
                     //Use logarithmic interpolant.
                     float lerpComponent = (zoomLevel - ZoomScaleAmount[zoom]) / (ZoomScaleAmount[zoomOut] - ZoomScaleAmount[zoom]);
                     if (lerpComponent == 0.0f) ret.LinearInterpolant = 0.0f;
-                    else ret.LinearInterpolant = -(float)Math.Log(lerpComponent, 10.0f);
+                    else ret.LinearInterpolant = -(float)Math.Log(lerpComponent, 100.0f);
                     return ret;
                 }
             }
@@ -173,36 +173,36 @@ namespace gamejam2014
             { ZoomLevels.One,
               new Dictionary<Jousters, Vector2>()
               {
-                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
-                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+                  { Jousters.Harmony, new Vector2(-300.0f, -300.0f) },
+                  { Jousters.Dischord, new Vector2(300.0f, 300.0f) },
               }
             },
             { ZoomLevels.Two,
               new Dictionary<Jousters, Vector2>()
               {
-                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
-                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+                  { Jousters.Harmony, new Vector2(-300.0f, -300.0f) },
+                  { Jousters.Dischord, new Vector2(300.0f, 300.0f) },
               }
             },
             { ZoomLevels.Three,
               new Dictionary<Jousters, Vector2>()
               {
-                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
-                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+                  { Jousters.Harmony, new Vector2(-300.0f, -300.0f) },
+                  { Jousters.Dischord, new Vector2(300.0f, 300.0f) },
               }
             },
             { ZoomLevels.Four,
               new Dictionary<Jousters, Vector2>()
               {
-                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
-                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+                  { Jousters.Harmony, new Vector2(-300.0f, -300.0f) },
+                  { Jousters.Dischord, new Vector2(300.0f, 300.0f) },
               }
             },
             { ZoomLevels.Five,
               new Dictionary<Jousters, Vector2>()
               {
-                  { Jousters.Harmony, new Vector2(500.0f, 500.0f) },
-                  { Jousters.Dischord, new Vector2(1000.0f, 1000.0f) },
+                  { Jousters.Harmony, new Vector2(-300.0f, -300.0f) },
+                  { Jousters.Dischord, new Vector2(300.0f, 300.0f) },
               }
             },
         };

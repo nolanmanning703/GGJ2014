@@ -46,6 +46,8 @@ namespace gamejam2014
         public bool ZoomingIn = false, ZoomingOut = false;
 
         //Zooming.
+        private float zoomTarget = Single.NaN,
+                      zoomStart = Single.NaN;
         private ZoomLevels currentZoom;
         public ZoomLevels CurrentZoom
         {
@@ -73,19 +75,18 @@ namespace gamejam2014
                 else         Camera.ZoomData.MaxZoomSpeed = WorldData.ZoomScaleAmount[WorldData.ZoomIn(WorldData.ZoomInverse(CurrentZoom))];
                 Camera.ZoomData.MaxZoomSpeed *= WorldData.CameraZoomSpeedScale;
 
-                if ((ZoomingIn && value == WorldData.ZoomIn(ZoomLevels.Five)))
-                {
-                    Camera.K_CamTarget = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-                    Camera.K_Position = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-                }
-                else if (ZoomingOut && value == ZoomLevels.Five)
+                zoomTarget = Camera.ZoomData.ZoomGivenDist(0.0f);
+                zoomStart = Camera.Zoom;
+
+                //if ((ZoomingIn && value == WorldData.ZoomIn(ZoomLevels.Five)))
+                //{
+                //    Camera.K_CamTarget = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
+                //    Camera.K_Position = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
+                //}
+                if (ZoomingOut && value == ZoomLevels.Five)
                 {
                     Camera.NonShakePos = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-                    Camera.CameraTarget = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-                    Camera.Pos = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-
-                    Camera.K_Position = Vector2.Zero;
-                    Camera.K_CamTarget = Vector2.Zero;
+                    Camera.Pos = Camera.NonShakePos;
                 }
 
                 SoundAssets.SwitchZoomMusic(value);
@@ -155,20 +156,53 @@ namespace gamejam2014
         {
             CurrentTime = gt;
 
+            Camera.K_CamTarget = Camera.NonShakePos;
+            Camera.K_Position = Camera.NonShakePos;
 
-            Camera.Update(gt);
+            //Camera.Update(gt);
             Timers.Update(gt);
+
+            if (ZoomingIn)
+            {
+                Camera.ZoomData.MaxZoomSpeed *= 1.01f;
+
+                if (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five))
+                {
+                    float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
+
+                    //Change position.
+                    const double pow = 0.1;
+                    Camera.NonShakePos = Vector2.Lerp(Vector2.Zero, WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, (float)Math.Pow(1.0f - progress, pow));
+
+                    //Change zoom.
+                    const double pow2 = 0.1;
+                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, 0.01f);
+                }
+            }
+            else if (ZoomingOut)
+            {
+                Camera.ZoomData.MaxZoomSpeed *= 0.999f;
+
+                if (CurrentZoom == ZoomLevels.Five)
+                {
+                    float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
+
+                    //Change position.
+                    const double pow = 10.0;
+                    Camera.NonShakePos = Vector2.Lerp(WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, Vector2.Zero, (float)Math.Pow(progress, pow));
+
+                    //Change zoom.
+                    const double pow2 = 0.1;
+                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, 0.01f);
+                }
+            }
 
             if ((ZoomingIn || ZoomingOut) && Camera.Zoom == Camera.TargetZoom)
             {
-                Camera.Pos = Vector2.Zero;
-                Camera.K_CamTarget = Vector2.Zero;
-                Camera.K_Position = Vector2.Zero;
                 Camera.NonShakePos = Vector2.Zero;
                 ZoomingIn = false;
                 ZoomingOut = false;
             }
-
 
             KS = Keyboard.GetState();
             MS = Mouse.GetState();
@@ -211,7 +245,7 @@ namespace gamejam2014
             }
             
 
-            if (CurrentMinigame != null)
+            if (!ZoomingOut && CurrentMinigame != null)
             {
                 CurrentMinigame.UpdateGame();
                 if (CurrentMinigame.MoveDown)
@@ -255,30 +289,28 @@ namespace gamejam2014
         }
         public void Draw(GameTime gt, SpriteBatch sb)
         {
-            //Render up to zoom level 4.
-            bool five = false;
-            float oldZoom = Camera.Zoom;
-            Vector2 pos = Camera.K_Position, targ = Camera.K_CamTarget, nsPos = Camera.NonShakePos;
-            if (CurrentZoom == ZoomLevels.Five || (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && ZoomingIn))
-            {
-                five = true;
+            bool seeingFive = currentZoom == ZoomLevels.Five ||
+                              (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && ZoomingIn);
 
+            //Render up to zoom level 4.
+            float oldZoom = Camera.Zoom;
+            Vector2 pos = Camera.NonShakePos;
+            if (seeingFive)
+            {
                 Camera.Zoom = 1.0f / WorldData.ZoomScaleAmount[ZoomLevels.Three];
                 Camera.NonShakePos = Vector2.Zero;
-                Camera.K_CamTarget = Vector2.Zero;
-                Camera.K_Position = Vector2.Zero;
+                Camera.Pos = Vector2.Zero;
 
                 CamTransform = Camera.TransformMatrix;
                 CamTransformInverse = Matrix.Invert(CamTransform);
 
             }
             RenderWorldToTexture(gt, sb);
-            if (five)
+            if (seeingFive)
             {
                 Camera.Zoom = oldZoom;
-                Camera.NonShakePos = nsPos;
-                Camera.K_CamTarget = targ;
-                Camera.K_Position = pos;
+                Camera.NonShakePos = pos;
+                Camera.Pos = pos;
 
                 CamTransform = Camera.TransformMatrix;
                 CamTransformInverse = Matrix.Invert(CamTransform);
@@ -286,7 +318,7 @@ namespace gamejam2014
             
             GraphicsDevice.Clear(Color.Black);
 
-            if (CurrentZoom == ZoomLevels.Five || (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && ZoomingIn))
+            if (seeingFive)
             {
                 sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
                 sb.Draw(ArtAssets.WorldBackgrounds[ZoomLevels.Five], Vector2.Zero, null, Color.White, 0.0f,
@@ -307,7 +339,7 @@ namespace gamejam2014
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
 
-            sb.DrawString(ArtAssets.DebugFont, Camera.Pos.ToString(), Vector2.Zero, Color.White);
+            sb.DrawString(ArtAssets.DebugFont, WorldData.GetCurrentZoom(Camera.Zoom).ToString(), Vector2.Zero, Color.White);
             ArtAssets.DrawSpecialBar(sb, Special, new Point(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight));
 
             sb.End();

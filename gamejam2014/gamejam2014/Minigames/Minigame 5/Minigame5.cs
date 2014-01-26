@@ -65,7 +65,8 @@ namespace gamejam2014.Minigames.Minigame_5
 
         protected override void DrawAbovePlayers(SpriteBatch sb)
         {
-            if (World.CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && World.ZoomingIn)
+            if ((World.CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five) && World.ZoomingIn) ||
+                (World.CurrentZoom == ZoomLevels.Five && World.ZoomingOut))
             {
                 //Draw the rendered world on top of the globe.
                 sb.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null, World.CamTransform);

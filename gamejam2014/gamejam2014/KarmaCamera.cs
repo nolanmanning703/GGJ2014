@@ -23,7 +23,7 @@ namespace gamejam2014
             ZoomData.MaxZoom = Single.MaxValue;
             ZoomData.MinZoom = Single.Epsilon;
 
-            PhysicsData.Acceleration = c => 9999999.0f;
+            PhysicsData.Acceleration = c => 99999.0f;
             PhysicsData.SnapToPlayerMaxDist = 999.0f;
             PhysicsData.Speed = c => 99999.0f;
             PhysicsData.WorldHeight = 99999.0f;
