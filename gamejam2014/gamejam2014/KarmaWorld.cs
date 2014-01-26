@@ -139,7 +139,7 @@ namespace gamejam2014
 
             CurrentTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
 
-            currentZoom = ZoomLevels.Five;
+            currentZoom = ZoomLevels.Three;
 
             Camera = new KarmaCamera(device);
             Camera.Zoom = GetCameraZoom(currentZoom);

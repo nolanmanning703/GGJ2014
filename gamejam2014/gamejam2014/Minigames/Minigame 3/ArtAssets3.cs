@@ -44,7 +44,7 @@ namespace gamejam2014.Minigames.Minigame_3
 
         public static void Initialize(GraphicsDevice device, ContentManager content)
         {
-            HillSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/Hill"), 4, TimeSpan.FromSeconds(0.05), true, -1, 1);
+            HillSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/Hill"));
             HillSprite.SetOriginToCenter();
             HillSprite.StartAnimation();
 
