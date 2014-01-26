@@ -18,5 +18,9 @@ namespace gamejam2014.Minigames.Minigame_3
         public static V2 GetDoghouseCenter(float zoomScale) { return zoomScale * DoghouseCenter; }
 
         public static float SpecialStunTime = 6.5f;
+
+        public static int NumbTennisBalls = 10;
+        public static float TennisBallMass = 0.01f;
+        public static float TennisBallMaxVelocity = 850.0f;
     }
 }

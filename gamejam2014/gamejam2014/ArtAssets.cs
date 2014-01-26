@@ -140,7 +140,7 @@ namespace gamejam2014
                                                                               8, TimeSpan.FromSeconds(0.15), true, -1, 1);
                             break;
                         case ZoomLevels.Three:
-                            PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + "H" + " " + zoomS),
+                            PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS),
                                                                               14, TimeSpan.FromSeconds(0.1), true, -1, 1);
                             break;
                         default:

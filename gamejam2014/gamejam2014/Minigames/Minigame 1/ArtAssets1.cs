@@ -19,14 +19,21 @@ namespace gamejam2014.Minigames.Minigame_1
         }
 
         public static AnimatedSprite GoodBacteria, InfectedBacteria;
+        public static AnimatedSprite Spikes, Aura;
 
         public static void Initialize(GraphicsDevice device, ContentManager content)
         {
             GoodBacteria = new AnimatedSprite(content.Load<Texture2D>("Art/Z1 Art/Pickup Good"));
-            InfectedBacteria = new AnimatedSprite(content.Load<Texture2D>("Art/Z1 Art/Pickup Infected"));
-
             GoodBacteria.SetOriginToCenter();
+            GoodBacteria.StartAnimation();
+
+            InfectedBacteria = new AnimatedSprite(content.Load<Texture2D>("Art/Z1 Art/Pickup Infected"));
             InfectedBacteria.SetOriginToCenter();
+            InfectedBacteria.StartAnimation();
+
+            Spikes = new AnimatedSprite(content.Load<Texture2D>("Art/Z1 Art/amoeba_spikes"), 8, ArtAssets.PlayerSprites[ZoomLevels.One][Jousting.Jousters.Harmony].FrameLength, true);
+            Spikes.SetOriginToCenter();
+            Spikes.StartAnimation();
         }
     }
 }

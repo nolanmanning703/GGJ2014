@@ -13,6 +13,7 @@ namespace gamejam2014.Minigames.Minigame_3
         public float TimeInHill;
         public Circle HillShape;
         public bool HarmonyInsideHill;
+        public Jousting.Blocker DogHouse;
 
         protected override AnimatedSprite GetAlternateHarmonySprite()
         {
@@ -21,7 +22,7 @@ namespace gamejam2014.Minigames.Minigame_3
         }
         protected override AnimatedSprite GetAlternateDischordSprite()
         {
-            if (Dischord.Velocity.Length() == 0.0f) return null;
+            if (Dischord.Velocity.Length() == 0.0f) return ArtAssets3.DischordJousterStill;
             return null;
         }
 
@@ -43,6 +44,17 @@ namespace gamejam2014.Minigames.Minigame_3
                                               ArtAssets3.GetDoghouseShape(WorldData.ZoomScaleAmount[CurrentZoom],
                                                                           PhysicsData3.GetDoghouseCenter(WorldData.ZoomScaleAmount[CurrentZoom])),
                                               true, 0.0f, 999.0f));
+            DogHouse = Blockers[0];
+            Utilities.Math.Shape.Rectangle bounds = World.WorldBounds;
+            Interval xInt = bounds.XEnds,
+                     yInt = bounds.YEnds;
+            for (int i = 0; i < PhysicsData3.NumbTennisBalls; ++i)
+            {
+                Blockers.Add(new Jousting.Blocker(new AnimatedSprite(ArtAssets3.TennisBall),
+                                                  ArtAssets3.GetTennisBallShape(WorldData.ZoomScaleAmount[CurrentZoom],
+                                                                                new Vector2(xInt.Random(), yInt.Random())),
+                                                  false, PhysicsData3.TennisBallMaxVelocity, PhysicsData3.TennisBallMass));
+            }
         }
 
         protected override void Update(Jousting.Jouster.CollisionData playerCollision)
@@ -59,9 +71,30 @@ namespace gamejam2014.Minigames.Minigame_3
                 return;
             }
 
+            //Cause friction.
+            for (int i = 0; i < PhysicsData3.NumbTennisBalls; ++i)
+            {
+                Jousting.Blocker ball = Blockers[i + 1];
+
+                //If the friction this frame is strong enough to stop the ball, manually stop it.
+                float fricPerFrame = Jousting.Jouster.PhysData.Friction * (float)World.CurrentTime.ElapsedGameTime.TotalSeconds;
+                if (fricPerFrame * fricPerFrame >= ball.Velocity.LengthSquared())
+                {
+                    ball.Velocity = Vector2.Zero;
+                }
+                //Otherwise, apply friction like normal.
+                else
+                {
+                    Vector2 vel = ball.Velocity;
+                    vel.Normalize();
+                    ball.Acceleration += -vel * Jousting.Jouster.PhysData.Friction * ball.Mass;
+                }
+            }
+
             ArtAssets3.HillSprite.UpdateAnimation(World.CurrentTime);
             ArtAssets3.ConfusedSprite.UpdateAnimation(World.CurrentTime);
             ArtAssets3.HarmonyJousterStill.UpdateAnimation(World.CurrentTime);
+            ArtAssets3.DischordJousterStill.UpdateAnimation(World.CurrentTime);
         }
 
         public override void OnHarmonySpecial()

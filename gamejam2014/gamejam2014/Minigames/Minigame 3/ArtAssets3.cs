@@ -28,12 +28,19 @@ namespace gamejam2014.Minigames.Minigame_3
         }
         public static float HillRadius = 100.0f;
 
+        public static Utilities.Math.Shape.Shape GetTennisBallShape(float zoomScale, V2 pos)
+        {
+            return new Utilities.Math.Shape.Circle(zoomScale * pos, zoomScale * 8.0f);
+        }
+
+
         public static AnimatedSprite HarmonyJousterStill, DischordJousterStill;
 
         public static AnimatedSprite HillSprite;
         public static AnimatedSprite DogHouseSprite;
         public static AnimatedSprite DogHouseLowerSprite;
         public static AnimatedSprite ConfusedSprite;
+        public static AnimatedSprite TennisBall;
 
         public static void Initialize(GraphicsDevice device, ContentManager content)
         {
@@ -57,6 +64,10 @@ namespace gamejam2014.Minigames.Minigame_3
             DischordJousterStill = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/baddog_still"), 8, TimeSpan.FromSeconds(0.1), true);
             DischordJousterStill.SetOriginToCenter();
             DischordJousterStill.StartAnimation();
+
+            TennisBall = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/tennisball"));
+            TennisBall.SetOriginToCenter();
+            TennisBall.StartAnimation();
         }
 
         public static void DrawHillTimeBar(V2 playerPos, float playerTimeInHill, SpriteBatch sb)

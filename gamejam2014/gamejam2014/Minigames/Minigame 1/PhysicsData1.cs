@@ -14,7 +14,7 @@ namespace gamejam2014.Minigames.Minigame_1
         public static float SpikePowerScale = 1.5f;
         public static float SpikePowerLength = 8.0f;
 
-        private static float AuraDist = 5.0f;
+        private static float AuraDist = 200.0f;
         public static float GetAuraDist(float zoomScale) { return zoomScale * AuraDist; }
         public static float AuraPowerLength = 5.0f;
 

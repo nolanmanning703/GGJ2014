@@ -139,6 +139,7 @@ namespace gamejam2014.Jousting
         {
             Acceleration /= Mass;
             base.Update(gt);
+            Acceleration = V2.Zero;
         }
 
         public void OnHitJouster(Jouster joust, float stabForce)

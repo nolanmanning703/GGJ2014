@@ -134,6 +134,8 @@ namespace gamejam2014.Minigames.Minigame_1
                     }
                 }
             }
+
+            ArtAssets1.Spikes.UpdateAnimation(World.CurrentTime);
         }
 
         public override void OnHarmonySpecial()
@@ -155,6 +157,31 @@ namespace gamejam2014.Minigames.Minigame_1
                     Dischord.IsSpiky_Aura = false;
                 };
             World.Timers.AddTimerNextUpdate(ic, true);
+        }
+
+        protected override void DrawBelowPlayers(Microsoft.Xna.Framework.Graphics.SpriteBatch sb)
+        {
+            bool willDraw = Harmony.IsSpiky_Aura || Dischord.IsSpiky_Aura;
+            if (!willDraw) return;
+
+
+            sb.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate, Microsoft.Xna.Framework.Graphics.BlendState.NonPremultiplied,
+                     null, null, null, null, World.CamTransform);
+
+            if (Harmony.IsSpiky_Aura)
+            {
+                ArtAssets1.Spikes.DrawArgs.Scale = HarmonySprite.DrawArgs.Scale;
+                ArtAssets1.Spikes.DrawArgs.Scale *= WorldData.ZoomScaleAmount[ZoomLevels.One];
+                ArtAssets1.Spikes.DrawArgs.Rotation = Harmony.Rotation;
+                ArtAssets1.Spikes.Draw(Harmony.Pos, sb);
+                ArtAssets1.Spikes.DrawArgs.Scale /= WorldData.ZoomScaleAmount[ZoomLevels.One];
+            }
+            if (Dischord.IsSpiky_Aura)
+            {
+
+            }
+
+            sb.End();
         }
     }
 }
