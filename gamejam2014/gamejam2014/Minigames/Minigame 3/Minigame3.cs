@@ -65,5 +65,11 @@ namespace gamejam2014.Minigames.Minigame_3
             ArtAssets3.HillSprite.Draw(HillShape.Center, sb);
             sb.End();
         }
+        protected override void DrawAbovePlayers(SpriteBatch sb)
+        {
+            sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
+            ArtAssets3.DrawHillTimeBar(Harmony.Pos, TimeInHill, sb);
+            sb.End();
+        }
     }
 }

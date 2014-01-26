@@ -356,7 +356,6 @@ namespace gamejam2014
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
 
-            sb.DrawString(ArtAssets.DebugFont, WorldData.GetCurrentZoom(Camera.Zoom).ToString(), Vector2.Zero, Color.White);
             ArtAssets.DrawSpecialBar(sb, Special, new Point(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight));
 
             sb.End();
