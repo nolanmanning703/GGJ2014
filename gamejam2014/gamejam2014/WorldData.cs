@@ -32,7 +32,7 @@ namespace gamejam2014
             { ZoomLevels.Four, 10.0f },
             { ZoomLevels.Five, 100.0f },
         };
-        public static float CameraZoomSpeedScale = 10.0f;
+        public static float CameraZoomSpeedScale = 35.0f;
 
         public static int ZoomToInt(ZoomLevels zoom)
         {
@@ -161,8 +161,8 @@ namespace gamejam2014
         public static Dictionary<ZoomLevels, Minigame> Minigames = new Dictionary<ZoomLevels, Minigame>()
         {
             { ZoomLevels.One, new Minigames.Minigame_1.Minigame1(ZoomLevels.One) },
-            { ZoomLevels.Two, new TestMinigame(ZoomLevels.Two) },
-            { ZoomLevels.Three, null },
+            { ZoomLevels.Two, null },
+            { ZoomLevels.Three, new TestMinigame(ZoomLevels.Three) },
             { ZoomLevels.Four, null },
             { ZoomLevels.Five, new Minigames.Minigame_5.Minigame5(ZoomLevels.Five) },
         };

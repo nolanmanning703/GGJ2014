@@ -43,7 +43,7 @@ namespace gamejam2014
         public KarmaCamera Camera;
         public Matrix CamTransform { get; private set; }
         public Matrix CamTransformInverse { get; private set; }
-        private bool zoomingBetween4And5 = false;
+        public bool ZoomingIn = false, ZoomingOut = false;
 
         //Zooming.
         private ZoomLevels currentZoom;
@@ -56,26 +56,25 @@ namespace gamejam2014
 
             set
             {
-                bool zoomIn = (value == WorldData.ZoomIn(currentZoom));
-                if (zoomIn && CurrentZoom == ZoomLevels.Five)
+                ZoomingIn = (value == WorldData.ZoomIn(currentZoom));
+                ZoomingOut = !ZoomingIn;
+
+                if (ZoomingOut && CurrentZoom == ZoomLevels.Four)
                 {
-                    zoomingBetween4And5 = true;
-                }
-                else if (!zoomIn && CurrentZoom == ZoomLevels.Four)
-                {
-                    zoomingBetween4And5 = true;
                     Camera.Pos = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
                 }
 
                 currentZoom = value;
 
-                if (!zoomIn) Camera.ZoomData.MaxZoomSpeed = WorldData.ZoomScaleAmount[WorldData.ZoomInverse(CurrentZoom)];
+                if (!ZoomingIn) Camera.ZoomData.MaxZoomSpeed = WorldData.ZoomScaleAmount[WorldData.ZoomInverse(CurrentZoom)];
                 else         Camera.ZoomData.MaxZoomSpeed = WorldData.ZoomScaleAmount[WorldData.ZoomIn(WorldData.ZoomInverse(CurrentZoom))];
                 Camera.ZoomData.MaxZoomSpeed *= WorldData.CameraZoomSpeedScale;
 
-                if (zoomingBetween4And5)
+                if ((ZoomingIn && value == ZoomLevels.Four))
                 {
                     Camera.CamTarget = CurrentMinigame.Harmony.Pos;
+                    Camera.Position = CurrentMinigame.Harmony.Pos;
+                    Camera.Position = CurrentMinigame.Harmony.Pos;
                 }
 
                 CurrentMinigame = WorldData.Minigames[value];
@@ -152,10 +151,13 @@ namespace gamejam2014
             Camera.Update(gt);
             Timers.Update(gt);
 
-            if (zoomingBetween4And5 && Camera.Zoom == Camera.TargetZoom)
+            if ((ZoomingIn || ZoomingOut) && Camera.Zoom == Camera.TargetZoom)
             {
                 Camera.Pos = Vector2.Zero;
-                zoomingBetween4And5 = false;
+                Camera.CamTarget = Vector2.Zero;
+                Camera.Position = Vector2.Zero;
+                ZoomingIn = false;
+                ZoomingOut = false;
             }
 
 
@@ -217,17 +219,13 @@ namespace gamejam2014
             CamTransformInverse = Matrix.Invert(CamTransform);
         }
 
-        public void Draw(GameTime gt, SpriteBatch sb)
+        private void RenderWorldToTexture(GameTime gt, SpriteBatch sb)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.SetRenderTarget(RenderedWorld);
 
-
-            //Minigames.
-
-            //Zoom level 5 shows the moving planet that the rest of the game takes place on. This requires a special rendering sequence.
-            if (CurrentZoom != ZoomLevels.Five && !zoomingBetween4And5)
+            foreach (ZoomLevels zoom in WorldData.DescendingZooms)
             {
-                foreach (ZoomLevels zoom in WorldData.DescendingZooms)
+                if (zoom != ZoomLevels.Five)
                 {
                     sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
 
@@ -237,62 +235,123 @@ namespace gamejam2014
 
                     sb.End();
 
-                    if (WorldData.Minigames[zoom] != null)
-                        WorldData.Minigames[zoom].Draw(sb);
+                    if (WorldData.Minigames[zoom] != null) WorldData.Minigames[zoom].Draw(sb);
                 }
             }
-            else
+
+            GraphicsDevice.SetRenderTarget(null);
+            RenderedWorldTex = (Texture2D)RenderedWorld;
+        }
+        public void Draw(GameTime gt, SpriteBatch sb)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            //Render up to zoom level 4.
+            bool five = false;
+            float oldZoom = Camera.Zoom;
+            Vector2 pos = Camera.Position, targ = Camera.CamTarget, posit = Camera.Position;
+            if (CurrentZoom == ZoomLevels.Five || (CurrentZoom == ZoomLevels.Four && ZoomingIn))
             {
-                //Render the zoom level 4 world to a render target.
+                five = true;
 
-                GraphicsDevice.SetRenderTarget(RenderedWorld);
-
-                float oldZoom = Camera.Zoom;
                 Camera.Zoom = 1.0f / WorldData.ZoomScaleAmount[ZoomLevels.Three];
+                Camera.Pos = Vector2.Zero;
+                Camera.CamTarget = Vector2.Zero;
+                Camera.Position = Vector2.Zero;
+
                 CamTransform = Camera.TransformMatrix;
                 CamTransformInverse = Matrix.Invert(CamTransform);
 
-                foreach (ZoomLevels zoom in WorldData.DescendingZooms)
-                {
-                    if (zoom != ZoomLevels.Five)
-                    {
-                        sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
-
-                        sb.Draw(ArtAssets.WorldBackgrounds[zoom], Vector2.Zero, null, Color.White, 0.0f,
-                                ArtAssets.GetBackgroundOrigin(zoom), WorldData.ZoomScaleAmount[zoom], SpriteEffects.None,
-                                ArtAssets.WorldBackgroundLayerMaxes[zoom]);
-
-                        sb.End();
-
-                        if (WorldData.Minigames[zoom] != null) WorldData.Minigames[zoom].Draw(sb);
-                    }
-                }
-
+            }
+            RenderWorldToTexture(gt, sb);
+            if (five)
+            {
                 Camera.Zoom = oldZoom;
+                Camera.Pos = pos;
+                Camera.CamTarget = targ;
+                Camera.Position = posit;
+
                 CamTransform = Camera.TransformMatrix;
                 CamTransformInverse = Matrix.Invert(CamTransform);
+            }
+            
 
+            #region Ignore this
+            if (false)
+            {
 
-                //Now draw the fifth zoom level minigame (it automatically uses the rendered world texture).
+                //Minigames.
 
-                GraphicsDevice.SetRenderTarget(null);
-                RenderedWorldTex = (Texture2D)RenderedWorld;
-
+                //Zoom level 5 shows the moving planet that the rest of the game takes place on. This requires a special rendering sequence.
                 if (true)
                 {
-                    sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
-                    sb.Draw(ArtAssets.WorldBackgrounds[ZoomLevels.Five], Vector2.Zero, null, Color.White, 0.0f,
-                            ArtAssets.GetBackgroundOrigin(ZoomLevels.Five), WorldData.ZoomScaleAmount[ZoomLevels.Five], SpriteEffects.None,
-                            ArtAssets.WorldBackgroundLayerMaxes[ZoomLevels.Five]);
-                    sb.End();
-                    if (WorldData.Minigames[ZoomLevels.Five] != null) WorldData.Minigames[ZoomLevels.Five].Draw(sb);
+                    if (Camera.Zoom == Camera.TargetZoom)
+                    {
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
+                        sb.Draw(ArtAssets.WorldBackgrounds[CurrentZoom], Vector2.Zero, null, Color.White, 0.0f,
+                                ArtAssets.GetBackgroundOrigin(CurrentZoom), WorldData.ZoomScaleAmount[CurrentZoom], SpriteEffects.None,
+                                ArtAssets.WorldBackgroundLayerMaxes[CurrentZoom]);
+                        sb.End();
+                        WorldData.Minigames[CurrentZoom].Draw(sb);
+                    }
+                    else
+                    {
+                        foreach (ZoomLevels zoom in WorldData.DescendingZooms)
+                        {
+                            sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
+
+                            sb.Draw(ArtAssets.WorldBackgrounds[zoom], Vector2.Zero, null, Color.White, 0.0f,
+                                    ArtAssets.GetBackgroundOrigin(zoom), WorldData.ZoomScaleAmount[zoom], SpriteEffects.None,
+                                    ArtAssets.WorldBackgroundLayerMaxes[zoom]);
+
+                            sb.End();
+
+                            if (WorldData.Minigames[zoom] != null)
+                                WorldData.Minigames[zoom].Draw(sb);
+                        }
+                    }
                 }
                 else
                 {
-                    sb.Begin();
-                    sb.Draw(RenderedWorld, Vector2.Zero, Color.White);
-                    sb.End();
+
+
+
+                    //Now draw the fifth zoom level minigame (it automatically uses the rendered world texture).
+
+                    if (true)
+                    {
+                        sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
+                        sb.Draw(ArtAssets.WorldBackgrounds[ZoomLevels.Five], Vector2.Zero, null, Color.White, 0.0f,
+                                ArtAssets.GetBackgroundOrigin(ZoomLevels.Five), WorldData.ZoomScaleAmount[ZoomLevels.Five], SpriteEffects.None,
+                                ArtAssets.WorldBackgroundLayerMaxes[ZoomLevels.Five]);
+                        sb.End();
+                        if (WorldData.Minigames[ZoomLevels.Five] != null) WorldData.Minigames[ZoomLevels.Five].Draw(sb);
+                    }
+                    else
+                    {
+                        sb.Begin();
+                        sb.Draw(RenderedWorld, Vector2.Zero, Color.White);
+                        sb.End();
+                    }
                 }
+
+            }
+            #endregion
+
+            if (CurrentZoom == ZoomLevels.Five)
+            {
+                sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, CamTransform);
+                sb.Draw(ArtAssets.WorldBackgrounds[ZoomLevels.Five], Vector2.Zero, null, Color.White, 0.0f,
+                        ArtAssets.GetBackgroundOrigin(ZoomLevels.Five), WorldData.ZoomScaleAmount[ZoomLevels.Five], SpriteEffects.None,
+                        ArtAssets.WorldBackgroundLayerMaxes[ZoomLevels.Five]);
+                sb.End();
+                if (WorldData.Minigames[ZoomLevels.Five] != null) WorldData.Minigames[ZoomLevels.Five].Draw(sb);
+            }
+            else
+            {
+                sb.Begin();
+                sb.Draw(RenderedWorldTex, new Rectangle(0, 0, RenderedWorldTex.Width, RenderedWorldTex.Height), Color.White);
+                sb.End();
             }
 
 
@@ -300,7 +359,7 @@ namespace gamejam2014
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
 
-            //sb.DrawString(ArtAssets.DebugFont, Special.ToString(), Vector2.Zero, Color.White);
+            sb.DrawString(ArtAssets.DebugFont, Camera.Zoom.ToString(), Vector2.Zero, Color.White);
             ArtAssets.DrawSpecialBar(sb, Special, new Point(GraphicsDevice.PresentationParameters.BackBufferWidth, GraphicsDevice.PresentationParameters.BackBufferHeight));
 
             sb.End();

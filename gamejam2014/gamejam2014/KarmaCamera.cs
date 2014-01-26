@@ -18,10 +18,16 @@ namespace gamejam2014
 
         public KarmaCamera(Microsoft.Xna.Framework.Graphics.GraphicsDevice gd)
             : base(entity, gd, CameraZoomData.DefaultData, CameraShakeData.DefaultData, CameraPhysicsData.DefaultValues(gd.PresentationParameters.BackBufferWidth, gd.PresentationParameters.BackBufferHeight),
-                   new MovementPhysics(new Utilities.Math.Shape.Circle(V2.Zero, 0.01f), 0, 0))
+                   new MovementPhysics(new Utilities.Math.Shape.Circle(V2.Zero, 0.01f)))
         {
             ZoomData.MaxZoom = Single.MaxValue;
             ZoomData.MinZoom = Single.Epsilon;
+
+            PhysicsData.Acceleration = c => 99999.0f;
+            PhysicsData.SnapToPlayerMaxDist = 1000.0f;
+            PhysicsData.Speed = c => 999999.0f;
+            PhysicsData.WorldHeight = 999999.0f;
+            PhysicsData.WorldWidth = 999999.0f;
         }
     }
 }

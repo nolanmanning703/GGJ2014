@@ -65,10 +65,13 @@ namespace gamejam2014.Minigames.Minigame_5
 
         protected override void DrawAbovePlayers(SpriteBatch sb)
         {
-            //Draw the rendered world on top of the globe.
-            sb.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null, World.CamTransform);
-            sb.Draw(World.RenderedWorldTex, Harmony.Pos, null, Microsoft.Xna.Framework.Color.White, 0.0f, 0.5f * new V2(World.RenderedWorldTex.Width, World.RenderedWorldTex.Height), 1.0f, SpriteEffects.None, 1.0f);
-            sb.End();
+            if (World.ZoomingOut)
+            {
+                //Draw the rendered world on top of the globe.
+                sb.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, null, World.CamTransform);
+                sb.Draw(World.RenderedWorldTex, Harmony.Pos, null, Microsoft.Xna.Framework.Color.White, 0.0f, 0.5f * new V2(World.RenderedWorldTex.Width, World.RenderedWorldTex.Height), 1.0f, SpriteEffects.None, 1.0f);
+                sb.End();
+            }
         }
     }
 }
