@@ -95,6 +95,7 @@ namespace gamejam2014.Minigames
             Harmony.Update(World.CurrentTime);
             Dischord.Update(World.CurrentTime);
             Jousting.Jouster.CollisionData colDat = Jousting.Jouster.CheckCollision(Harmony, Dischord);
+            if (colDat != null) Utilities.Math.MovementPhysics.Separate(Harmony, Dischord, 0.2f * WorldData.ZoomScaleAmount[CurrentZoom]);
 
             if (Harmony.Health <= 0.0f)
             {
@@ -167,6 +168,7 @@ namespace gamejam2014.Minigames
             for (int i = 0; i < Blockers.Count; ++i) if (!Blockers[i].IsAbovePlayer)
             {
                 Blockers[i].Sprite.DrawArgs.Scale *= scale;
+                Blockers[i].Sprite.DrawArgs.Rotation = Blockers[i].Rotation;
                 Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
                 Blockers[i].Sprite.DrawArgs.Scale *= invScale;
             }
@@ -175,6 +177,7 @@ namespace gamejam2014.Minigames
             for (int i = 0; i < Blockers.Count; ++i) if (Blockers[i].IsAbovePlayer)
             {
                 Blockers[i].Sprite.DrawArgs.Scale *= scale;
+                Blockers[i].Sprite.DrawArgs.Rotation = Blockers[i].Rotation;
                 Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
                 Blockers[i].Sprite.DrawArgs.Scale *= invScale;
             }

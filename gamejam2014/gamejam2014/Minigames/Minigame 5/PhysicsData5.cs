@@ -32,5 +32,10 @@ namespace gamejam2014.Minigames.Minigame_5
 
             return zoomScale * Microsoft.Xna.Framework.MathHelper.Lerp(BlackHolePullAccel.Start, BlackHolePullAccel.End, interpolant);
         }
+
+        private static float RingSpeed = 2000.0f;
+        public static float GetRingSpeed(float zoomScale) { return zoomScale * RingSpeed; }
+
+        public static float RingDamage = 0.225f;
     }
 }

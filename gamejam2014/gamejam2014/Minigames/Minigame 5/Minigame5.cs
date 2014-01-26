@@ -19,6 +19,26 @@ namespace gamejam2014.Minigames.Minigame_5
 
         }
 
+        public void LaunchRing(V2 pos, V2 dir)
+        {
+            Jousting.Blocker ring = new Jousting.Blocker(new Utilities.Graphics.AnimatedSprite(ArtAssets5.Ring),
+                                                         ArtAssets5.GetRingShape(pos, WorldData.ZoomScaleAmount[CurrentZoom]),
+                                                         true, PhysicsData5.GetRingSpeed(WorldData.ZoomScaleAmount[CurrentZoom]));
+            ring.Rotation = UsefulMath.FindRotation(dir);
+            ring.Velocity = ring.MaxVelocity * dir;
+            //ring 
+
+            ring.OnHitByJouster += (s, e) =>
+                {
+                    if (e.Enemy.ThisJouster == Jousting.Jousters.Dischord) return;
+
+                    e.Enemy.Health -= PhysicsData5.RingDamage;
+                    KillBlocker((Jousting.Blocker)s);
+                };
+
+            Blockers.Add(ring);
+        }
+
         protected override void Reset()
         {
             Blockers.Add(new Jousting.Blocker(ArtAssets5.BlackHole, PhysicsData5.GetBlackHole(), true, 0.0f, 1.0f));
@@ -47,6 +67,12 @@ namespace gamejam2014.Minigames.Minigame_5
                                        PhysicsData5.GetBlackHolePull((blocker.Pos - blackHole.Center).Length(), scale);
 
             }
+
+            //Keep all rings facing the right way.
+            for (int i = 1; i < Blockers.Count; ++i)
+            {
+                Blockers[i].Rotation = UsefulMath.FindRotation(Blockers[i].Velocity);
+            }
         }
 
         protected override void OnMinigameEnd()
@@ -57,11 +83,11 @@ namespace gamejam2014.Minigames.Minigame_5
 
         public override void OnHarmonySpecial()
         {
-
+            //Harmony's special just cancels' dischord's special from happening.
         }
         public override void OnDischordSpecial()
         {
-
+            LaunchRing(Dischord.Pos, UsefulMath.FindDirection(Dischord.Rotation));
         }
 
         protected override void DrawAbovePlayers(SpriteBatch sb)

@@ -122,7 +122,7 @@ namespace gamejam2014.Jousting
 
         public Jouster(Jousters thisJouster, V2 pos, ZoomLevels zoom)
             : base(ArtAssets.GetJousterShape(KarmaWorld.World.CurrentZoom, WorldData.ZoomScaleAmount[zoom]),
-                   Single.PositiveInfinity, PhysData.MaxSpeed)
+                   (zoom == ZoomLevels.Five ? Single.PositiveInfinity : PhysData.Acceleration), PhysData.MaxSpeed)
         {
             Pos = pos;
             ThisJouster = thisJouster;

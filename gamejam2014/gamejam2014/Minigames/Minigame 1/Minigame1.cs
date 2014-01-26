@@ -100,8 +100,9 @@ namespace gamejam2014.Minigames.Minigame_1
         {
             ArtAssets.PlayerSprites[ZoomLevels.One][Jousters.Harmony].DrawArgs.Scale = V2.One;
             ArtAssets.PlayerSprites[ZoomLevels.One][Jousters.Dischord].DrawArgs.Scale = V2.One;
-
-            Blockers.Add(MakeRandomBacteria());
+            
+            for (int i = 0; i < PhysicsData1.NumbStartingBacteria; ++i)
+                Blockers.Add(MakeRandomBacteria());
 
             //Start the timer loop.
             IntervalCounter bacteriaSpawn = new IntervalCounter(TimeSpan.FromSeconds(PhysicsData1.BacteriaAppearanceTime));

@@ -146,6 +146,11 @@ namespace gamejam2014.Jousting
         {
             if (OnHitByJouster != null) OnHitByJouster(this, new Jouster.HurtEventArgs(joust, stabForce));
 
+            float max = joust.MaxVelocity;
+            joust.MaxVelocity = 0.000001f;
+            MovementPhysics.Separate(this, joust, 0.2f * WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
+            joust.MaxVelocity = max;
+
             if (IsMovable)
             {
                 //Define "tangent" as the line perpendicular to the line from the Blocker to the Jouster.
@@ -173,6 +178,8 @@ namespace gamejam2014.Jousting
         {
             //No hitting if both blockers don't move.
             if (!IsMovable && !other.IsMovable) return;
+
+            MovementPhysics.Separate(this, other, 0.2f * WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
 
             //Raise collision events.
             if (OnHitByBlocker != null) OnHitByBlocker(this, new HitBlockerEventArgs(other));

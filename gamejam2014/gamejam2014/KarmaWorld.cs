@@ -161,6 +161,8 @@ namespace gamejam2014
         {
             CurrentTime = gt;
 
+            if (KS.IsKeyDown(Keys.G)) Special = 1.0f;
+
 
             Timers.Update(gt);
 
