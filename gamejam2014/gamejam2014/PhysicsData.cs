@@ -36,11 +36,11 @@ namespace gamejam2014
         /// </summary>
         private static Dictionary<ZoomLevels, float> MinHitSpeeds = new Dictionary<ZoomLevels, float>()
         {
-            { ZoomLevels.One, 100.0f },
-            { ZoomLevels.Two, 100.0f },
-            { ZoomLevels.Three, 100.0f },
-            { ZoomLevels.Four, 100.0f },
-            { ZoomLevels.Five, 100.0f },
+            { ZoomLevels.One, 300.0f },
+            { ZoomLevels.Two, 300.0f },
+            { ZoomLevels.Three, 300.0f },
+            { ZoomLevels.Four, 300.0f },
+            { ZoomLevels.Five, 300.0f },
         };
         /// <summary>
         /// Gets actual minimum hit speed for the given zoom level, accounting for level zoom scale.

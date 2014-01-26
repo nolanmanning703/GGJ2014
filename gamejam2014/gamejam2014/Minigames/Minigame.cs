@@ -95,7 +95,7 @@ namespace gamejam2014.Minigames
             Harmony.Update(World.CurrentTime);
             Dischord.Update(World.CurrentTime);
             Jousting.Jouster.CollisionData colDat = Jousting.Jouster.CheckCollision(Harmony, Dischord);
-            if (colDat != null) Utilities.Math.MovementPhysics.Separate(Harmony, Dischord, 0.2f * WorldData.ZoomScaleAmount[CurrentZoom]);
+            Utilities.Math.MovementPhysics.Separate(Harmony, Dischord, 0.2f * WorldData.ZoomScaleAmount[CurrentZoom]);
 
             if (Harmony.Health <= 0.0f)
             {
