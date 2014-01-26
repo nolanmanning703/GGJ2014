@@ -130,6 +130,7 @@
     <Compile Include="Minigames\Minigame 2\PhysicsData2.cs" />
     <Compile Include="Minigames\Minigame 2\SoundAssets2.cs" />
     <Compile Include="Minigames\Minigame 3\ArtAssets3.cs" />
+    <Compile Include="Minigames\Minigame 3\Minigame3.cs" />
     <Compile Include="Minigames\Minigame 3\PhysicsData3.cs" />
     <Compile Include="Minigames\Minigame 3\SoundAssets3.cs" />
     <Compile Include="Minigames\Minigame 4\ArtAssets4.cs">

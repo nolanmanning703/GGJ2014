@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Art\Z2 Art\" />
-    <Folder Include="Art\Z3 Art\" />
     <Folder Include="Sound\" />
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +211,13 @@
     </Compile>
     <Compile Include="Art\Z4 Art\good4.png">
       <Name>good4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Art\Z3 Art\Hill.png">
+      <Name>Hill</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -168,7 +168,7 @@ namespace gamejam2014
         {
             { ZoomLevels.One, new Minigames.Minigame_1.Minigame1(ZoomLevels.One) },
             { ZoomLevels.Two, null },
-            { ZoomLevels.Three, new TestMinigame(ZoomLevels.Three) },
+            { ZoomLevels.Three, new Minigames.Minigame_3.Minigame3(ZoomLevels.Three) },
             { ZoomLevels.Four, null },
             { ZoomLevels.Five, new Minigames.Minigame_5.Minigame5(ZoomLevels.Five) },
         };
