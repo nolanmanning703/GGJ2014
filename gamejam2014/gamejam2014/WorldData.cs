@@ -146,10 +146,16 @@ namespace gamejam2014
                     IntermediateZoom ret = new IntermediateZoom();
                     ret.Inner = zoom;
                     ret.Outer = zoomOut;
+
+
                     //Use logarithmic interpolant.
+
                     float lerpComponent = (zoomLevel - ZoomScaleAmount[zoom]) / (ZoomScaleAmount[zoomOut] - ZoomScaleAmount[zoom]);
+                    
                     if (lerpComponent == 0.0f) ret.LinearInterpolant = 0.0f;
-                    else ret.LinearInterpolant = -(float)Math.Log(lerpComponent, 100.0f);
+                    else ret.LinearInterpolant = lerpComponent;// (float)Math.Pow(lerpComponent, 0.1f);
+
+
                     return ret;
                 }
             }

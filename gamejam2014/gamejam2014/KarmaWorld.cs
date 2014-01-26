@@ -15,6 +15,12 @@ namespace gamejam2014
     /// </summary>
     public class KarmaWorld
     {
+        private static bool WithinError(float f1, float f2, float error)
+        {
+            return (Math.Abs(f1 - f2) <= error);
+        }
+
+
         //Keep a static reference to this world to simplify matters.
         //After all, there's only ever one instance at a time.
         public static KarmaWorld World = null;
@@ -41,13 +47,15 @@ namespace gamejam2014
 
         //Camera.
         public KarmaCamera Camera;
+        public float GetCameraZoom(ZoomLevels zoom) { return 1.0f / WorldData.ZoomScaleAmount[zoom]; }
         public Matrix CamTransform { get; private set; }
         public Matrix CamTransformInverse { get; private set; }
-        public bool ZoomingIn = false, ZoomingOut = false;
+        public bool ZoomingIn, ZoomingOut;
 
         //Zooming.
         private float zoomTarget = Single.NaN,
                       zoomStart = Single.NaN;
+        private float zoomStartTime = Single.NaN;
         private ZoomLevels currentZoom;
         public ZoomLevels CurrentZoom
         {
@@ -71,18 +79,11 @@ namespace gamejam2014
                 CurrentMinigame = WorldData.Minigames[value];
                 if (CurrentMinigame != null) CurrentMinigame.ResetGame();
 
-                if (!ZoomingIn) Camera.ZoomData.MaxZoomSpeed = WorldData.ZoomScaleAmount[WorldData.ZoomInverse(CurrentZoom)];
-                else         Camera.ZoomData.MaxZoomSpeed = WorldData.ZoomScaleAmount[WorldData.ZoomIn(WorldData.ZoomInverse(CurrentZoom))];
-                Camera.ZoomData.MaxZoomSpeed *= WorldData.CameraZoomSpeedScale;
-
-                zoomTarget = Camera.ZoomData.ZoomGivenDist(0.0f);
+                if (ZoomingIn) zoomTarget = GetCameraZoom(currentZoom);
+                else zoomTarget = GetCameraZoom(WorldData.ZoomOut(currentZoom));
                 zoomStart = Camera.Zoom;
+                zoomStartTime = (float)CurrentTime.TotalGameTime.TotalSeconds;
 
-                //if ((ZoomingIn && value == WorldData.ZoomIn(ZoomLevels.Five)))
-                //{
-                //    Camera.K_CamTarget = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-                //    Camera.K_Position = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
-                //}
                 if (ZoomingOut && value == ZoomLevels.Five)
                 {
                     Camera.NonShakePos = WorldData.Minigames[ZoomLevels.Five].Harmony.Pos;
@@ -138,70 +139,84 @@ namespace gamejam2014
 
             CurrentTime = new GameTime(TimeSpan.Zero, TimeSpan.Zero);
 
-            currentZoom = ZoomLevels.Five;//Three
+            currentZoom = ZoomLevels.Five;
 
             Camera = new KarmaCamera(device);
-            Camera.ZoomData.ZoomGivenDist = d => 1.0f / WorldData.ZoomScaleAmount[CurrentZoom];
-            Camera.Zoom = 1.0f / WorldData.ZoomScaleAmount[currentZoom];
+            Camera.Zoom = GetCameraZoom(currentZoom);
 
-            CurrentZoom = currentZoom;;
+            CurrentZoom = currentZoom;
+            ZoomingIn = false;
+            ZoomingOut = false;
             foreach (ZoomLevels zooms in WorldData.AscendingZooms)
                 if (WorldData.Minigames[zooms] != null)
                     WorldData.Minigames[zooms].ResetGame();
 
             JoustingInput.InitializeInput();
+
+            Camera.Update(new GameTime(TimeSpan.FromSeconds(0.016667), TimeSpan.FromSeconds(0.016667)));
+            Camera.Zoom = GetCameraZoom(currentZoom);
         }
 
         public void Update(GameTime gt)
         {
             CurrentTime = gt;
 
-            Camera.K_CamTarget = Camera.NonShakePos;
-            Camera.K_Position = Camera.NonShakePos;
 
-            //Camera.Update(gt);
             Timers.Update(gt);
 
+
+            if (ZoomingIn || ZoomingOut)
+            {
+                if (WithinError(Camera.Zoom, zoomTarget,
+                                (ZoomingIn ? 0.01f * WorldData.ZoomScaleAmount[currentZoom] :
+                                             0.0000001f * WorldData.ZoomScaleAmount[currentZoom])))
+                {
+                    Camera.Zoom = zoomTarget;
+                    Camera.NonShakePos = Vector2.Zero;
+                    Camera.Pos = Camera.NonShakePos;
+                    ZoomingIn = false;
+                    ZoomingOut = false;
+                }
+            }
+
+            float deltaT = (float)gt.TotalGameTime.TotalSeconds - zoomStartTime;
             if (ZoomingIn)
             {
-                Camera.ZoomData.MaxZoomSpeed *= 1.01f;
-
                 if (CurrentZoom == WorldData.ZoomIn(ZoomLevels.Five))
                 {
                     float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
+                    if (progress < 0.0f || progress > 1.0f)
+                    {
+                        Console.WriteLine(progress);
+                    }
 
                     //Change position.
-                    const double pow = 0.1;
-                    Camera.NonShakePos = Vector2.Lerp(Vector2.Zero, WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, (float)Math.Pow(1.0f - progress, pow));
+                    const double pow = 20.0;
+                    Camera.NonShakePos = Vector2.Lerp(WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, Vector2.Zero, (float)Math.Pow(1.0f - progress, pow));
+                    Camera.Pos = Camera.NonShakePos;
 
                     //Change zoom.
-                    const double pow2 = 0.1;
-                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, 0.01f);
+                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, deltaT * 0.025f);
                 }
             }
             else if (ZoomingOut)
             {
-                Camera.ZoomData.MaxZoomSpeed *= 0.999f;
-
                 if (CurrentZoom == ZoomLevels.Five)
                 {
                     float progress = WorldData.GetCurrentZoom(Camera.Zoom).LinearInterpolant;
+                    if (progress < 0.0f || progress > 1.0f)
+                    {
+                        Console.WriteLine(progress);
+                    }
 
                     //Change position.
-                    const double pow = 10.0;
-                    Camera.NonShakePos = Vector2.Lerp(WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, Vector2.Zero, (float)Math.Pow(progress, pow));
+                    const double pow = 30.0;
+                    Camera.NonShakePos = Vector2.Lerp(WorldData.Minigames[ZoomLevels.Five].Harmony.Pos, Vector2.Zero, (float)Math.Pow(1.0f - progress, pow));
+                    Camera.Pos = Camera.NonShakePos;
 
                     //Change zoom.
-                    const double pow2 = 0.1;
-                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, 0.01f);
+                    Camera.Zoom = MathHelper.Lerp(Camera.Zoom, zoomTarget, deltaT * 0.025f);
                 }
-            }
-
-            if ((ZoomingIn || ZoomingOut) && Camera.Zoom == Camera.TargetZoom)
-            {
-                Camera.NonShakePos = Vector2.Zero;
-                ZoomingIn = false;
-                ZoomingOut = false;
             }
 
             KS = Keyboard.GetState();
@@ -299,7 +314,7 @@ namespace gamejam2014
             {
                 Camera.Zoom = 1.0f / WorldData.ZoomScaleAmount[ZoomLevels.Three];
                 Camera.NonShakePos = Vector2.Zero;
-                Camera.Pos = Vector2.Zero;
+                Camera.Pos = Camera.NonShakePos;
 
                 CamTransform = Camera.TransformMatrix;
                 CamTransformInverse = Matrix.Invert(CamTransform);
@@ -310,7 +325,7 @@ namespace gamejam2014
             {
                 Camera.Zoom = oldZoom;
                 Camera.NonShakePos = pos;
-                Camera.Pos = pos;
+                Camera.Pos = Camera.NonShakePos;
 
                 CamTransform = Camera.TransformMatrix;
                 CamTransformInverse = Matrix.Invert(CamTransform);
