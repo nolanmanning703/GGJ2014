@@ -53,6 +53,9 @@ namespace gamejam2014.Jousting
             col.StabStrength1 = first.Mass * V2.Dot(lookDir1, moveDir1);
             col.StabStrength2 = second.Mass * V2.Dot(lookDir2, moveDir2);
 
+            if (first.IsSpiky) col.StabStrength1 *= Minigames.Minigame_1.PhysicsData1.SpikePowerScale;
+            if (second.IsSpiky) col.StabStrength2 *= Minigames.Minigame_1.PhysicsData1.SpikePowerScale;
+
             //If neither player really did damage, exit.
             if (col.StabStrength1 <= 0.0f && col.StabStrength2 <= 0.0f) return null;
 
@@ -61,15 +64,11 @@ namespace gamejam2014.Jousting
 
             if (col.StabStrength1 > col.StabStrength2)
             {
-                Console.WriteLine(col.StabStrength1 / WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
-
                 first.Hurt(second, col.StabStrength1);
                 second.HurtBy(first, col.StabStrength1);
             }
             else
             {
-                Console.WriteLine(col.StabStrength2 / WorldData.ZoomScaleAmount[KarmaWorld.World.CurrentZoom]);
-
                 first.HurtBy(second, col.StabStrength2);
                 second.Hurt(first, col.StabStrength2);
             }
@@ -117,11 +116,12 @@ namespace gamejam2014.Jousting
         //Abilities.
         public bool IsSpiky_Aura = false;
         public bool IsStunned = false;
+        public bool IsSpiky { get { return IsSpiky_Aura && ThisJouster == Jousters.Harmony; } }
+        public bool IsAura { get { return IsSpiky_Aura && ThisJouster == Jousters.Dischord; } }
 
 
         public Jouster(Jousters thisJouster, V2 pos, ZoomLevels zoom)
-            : base(new Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
-                   ArtAssets.GetJousterPolygon(KarmaWorld.World.CurrentZoom, WorldData.ZoomScaleAmount[zoom]).ToArray()),
+            : base(ArtAssets.GetJousterShape(KarmaWorld.World.CurrentZoom, WorldData.ZoomScaleAmount[zoom]),
                    Single.PositiveInfinity, PhysData.MaxSpeed)
         {
             Pos = pos;

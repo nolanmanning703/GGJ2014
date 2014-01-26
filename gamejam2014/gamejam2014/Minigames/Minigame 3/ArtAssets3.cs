@@ -22,11 +22,13 @@ namespace gamejam2014.Minigames.Minigame_3
                                                                                 new V2(64, 106),
                                                                                 new V2(15, 99.5f),
                                                                                 new V2(15, 25.5f),
-                                                                            }.Select(v => (v * zoomScale) + pos).ToArray());
+                                                                            }.Select(v => (v * zoomScale * 2f) + (pos * 2f)).ToArray());
             s.Center = pos;
             return s;
         }
-        public static float HillRadius = 50.0f;
+        public static float HillRadius = 100.0f;
+
+        public static AnimatedSprite HarmonyJousterStill, DischordJousterStill;
 
         public static AnimatedSprite HillSprite;
         public static AnimatedSprite DogHouseSprite;
@@ -47,6 +49,14 @@ namespace gamejam2014.Minigames.Minigame_3
             DogHouseSprite.SetOriginToCenter();
             DogHouseLowerSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/doghouse lower"));
             DogHouseLowerSprite.SetOriginToCenter();
+
+            HarmonyJousterStill = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/dog_still"), 8, TimeSpan.FromSeconds(0.1), true);
+            HarmonyJousterStill.SetOriginToCenter();
+            HarmonyJousterStill.StartAnimation();
+
+            DischordJousterStill = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/baddog_still"), 8, TimeSpan.FromSeconds(0.1), true);
+            DischordJousterStill.SetOriginToCenter();
+            DischordJousterStill.StartAnimation();
         }
 
         public static void DrawHillTimeBar(V2 playerPos, float playerTimeInHill, SpriteBatch sb)

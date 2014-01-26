@@ -31,8 +31,7 @@ namespace gamejam2014.Minigames.Minigame_1
 
             V2 oldPos = jouster.Pos;
             float oldRot = jouster.Rotation;
-            jouster.ColShape = new Utilities.Math.Shape.Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
-                                                                ArtAssets.GetJousterPolygon(ZoomLevels.One, scale * WorldData.ZoomScaleAmount[ZoomLevels.One]).ToArray());
+            jouster.ColShape = ArtAssets.GetJousterShape(ZoomLevels.One, scale * WorldData.ZoomScaleAmount[ZoomLevels.One]);
             jouster.Pos = oldPos;
             jouster.Rotation = oldRot;
         }
@@ -108,23 +107,54 @@ namespace gamejam2014.Minigames.Minigame_1
             IntervalCounter bacteriaSpawn = new IntervalCounter(TimeSpan.FromSeconds(PhysicsData1.BacteriaAppearanceTime));
             bacteriaSpawn.IntervalTrigger += (s, e) =>
                 {
-                    Blockers.Add(MakeRandomBacteria());
+                    Bacteria bactt = MakeRandomBacteria();
+                    Blockers.Add(bactt);
+
+                    IntervalCounter counter = new IntervalCounter(TimeSpan.FromSeconds(PhysicsData1.BacteriaLifeLength));
+                    counter.IntervalTrigger += (s2, e2) =>
+                        {
+                            KillBlocker(bactt);
+                        };
+                    Timers.AddTimerNextUpdate(counter, true);
                 };
             Timers.AddTimerNextUpdate(bacteriaSpawn, false);
         }
 
-        protected override void Update(Jousting.Jouster.CollisionData playerCollision)
+        protected override void Update(Jouster.CollisionData playerCollision)
         {
-
+            if (Dischord.IsSpiky_Aura)
+            {
+                //The aura can infect bacteria at a distance.
+                for (int i = 0; i < Blockers.Count; ++i)
+                {
+                    if (V2.Distance(Blockers[i].Pos, Dischord.ColShape.ClosestOnEdgeToPoint(Blockers[i].Pos)) <
+                        PhysicsData1.GetAuraDist(WorldData.ZoomScaleAmount[CurrentZoom]))
+                    {
+                        ((Bacteria)Blockers[i]).Infect(WorldData.ZoomScaleAmount[CurrentZoom]);
+                    }
+                }
+            }
         }
 
         public override void OnHarmonySpecial()
         {
-            throw new NotImplementedException();
+            Harmony.IsSpiky_Aura = true;
+            IntervalCounter ic = new IntervalCounter(TimeSpan.FromSeconds(PhysicsData1.SpikePowerLength));
+            ic.IntervalTrigger += (s, e) =>
+                {
+                    Harmony.IsSpiky_Aura = false;
+                };
+            World.Timers.AddTimerNextUpdate(ic, true);
         }
         public override void OnDischordSpecial()
         {
-            throw new NotImplementedException();
+            Dischord.IsSpiky_Aura = true;
+            IntervalCounter ic = new IntervalCounter(TimeSpan.FromSeconds(PhysicsData1.AuraPowerLength));
+            ic.IntervalTrigger += (s, e) =>
+                {
+                    Dischord.IsSpiky_Aura = false;
+                };
+            World.Timers.AddTimerNextUpdate(ic, true);
         }
     }
 }

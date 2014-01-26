@@ -33,8 +33,28 @@ namespace gamejam2014.Minigames
 
         public float TimeSinceMinigameStart { get; private set; }
 
-        protected Utilities.Graphics.AnimatedSprite HarmonySprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Harmony]; } }
-        protected Utilities.Graphics.AnimatedSprite DischordSprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Dischord]; } }
+        protected Utilities.Graphics.AnimatedSprite HarmonySprite
+        {
+            get
+            {
+                Utilities.Graphics.AnimatedSprite sprite = GetAlternateHarmonySprite();
+                if (Object.ReferenceEquals(sprite, null))
+                    return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Harmony];
+                else return sprite;
+            }
+        }
+        protected Utilities.Graphics.AnimatedSprite DischordSprite
+        {
+            get
+            {
+                Utilities.Graphics.AnimatedSprite sprite = GetAlternateDischordSprite();
+                if (Object.ReferenceEquals(sprite, null))
+                    return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Dischord];
+                else return sprite;
+            }
+        }
+        protected virtual Utilities.Graphics.AnimatedSprite GetAlternateHarmonySprite() { return null; }
+        protected virtual Utilities.Graphics.AnimatedSprite GetAlternateDischordSprite() { return null; }
 
         private List<Utilities.Graphics.AnimatedSprite> UniqueBlockerSprites = new List<Utilities.Graphics.AnimatedSprite>();
 

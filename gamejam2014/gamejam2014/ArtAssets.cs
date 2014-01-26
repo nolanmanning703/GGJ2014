@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Utilities.Graphics;
+using Utilities.Math.Shape;
+using Rect = Microsoft.Xna.Framework.Rectangle;
+using SRect = Utilities.Math.Shape.Rectangle;
 
 namespace gamejam2014
 {
@@ -81,56 +84,39 @@ namespace gamejam2014
 
         public static SpriteFont DebugFont, WorldFont;
 
-        public static List<Vector2> GetJousterPolygon(ZoomLevels zoom, float scale)
+        public static Shape GetJousterShape(ZoomLevels zoom, float scale)
         {
             switch (zoom)
             {
                 case ZoomLevels.One:
-                    return new List<Vector2>()
-                    {
-                        new Vector2(61.0f, 28.0f),
-                        new Vector2(41.0f, 47.0f),
-                        new Vector2(14.0f, 42.0f),
-                        new Vector2(3.0f, 31.0f),
-                        new Vector2(21.0f, 15.0f),
-                        new Vector2(48.0f, 19.0f),
-                    }.Select(v => v * scale).ToList();
+                    return new Polygon(CullMode.CullClockwiseFace, new List<Vector2>()
+                                       {
+                                           new Vector2(61.0f, 28.0f),
+                                           new Vector2(41.0f, 47.0f),
+                                           new Vector2(14.0f, 42.0f),
+                                           new Vector2(3.0f, 31.0f),
+                                           new Vector2(21.0f, 15.0f),
+                                           new Vector2(48.0f, 19.0f),
+                                       }.Select(v => v * scale * 2.0f).ToArray());
                 case ZoomLevels.Two:
-                    return new List<Vector2>()
-                    {
-                        new Vector2(64.0f, 32.0f),
-                        new Vector2(12.0f, 63.0f),
-                        new Vector2(0.0f, 64.0f),
-                        new Vector2(0.0f, 0.0f),
-                        new Vector2(12.0f, 1.0f),
-                    }.Select(v => v * scale).ToList();
+                    return new Circle(Vector2.Zero, 100.0f * scale);
                 case ZoomLevels.Three:
-                    return new List<Vector2>()
-                    {
-                        new Vector2(64.0f, 32.0f),
-                        new Vector2(12.0f, 63.0f),
-                        new Vector2(0.0f, 64.0f),
-                        new Vector2(0.0f, 0.0f),
-                        new Vector2(12.0f, 1.0f),
-                    }.Select(v => v * scale).ToList();
+                    return new Polygon(CullMode.CullClockwiseFace, new List<Vector2>()
+                                       {
+                                           new Vector2(125, 61),
+                                           new Vector2(114, 68),
+                                           new Vector2(89, 73),
+                                           new Vector2(34, 73),
+                                           new Vector2(27, 64),
+                                           new Vector2(34, 54),
+                                           new Vector2(89, 51),
+                                           new Vector2(114, 55),
+                                       }.Select(v => v * scale).ToArray());
                 case ZoomLevels.Four:
-                    return new List<Vector2>()
-                    {
-                        new Vector2(64.0f, 32.0f),
-                        new Vector2(12.0f, 63.0f),
-                        new Vector2(0.0f, 64.0f),
-                        new Vector2(0.0f, 0.0f),
-                        new Vector2(12.0f, 1.0f),
-                    }.Select(v => v * scale).ToList();
+                    return new Circle(Vector2.Zero, 100.0f * scale);
                 case ZoomLevels.Five:
-                    return new List<Vector2>()
-                    {
-                        new Vector2(64.0f, 32.0f),
-                        new Vector2(12.0f, 63.0f),
-                        new Vector2(0.0f, 64.0f),
-                        new Vector2(0.0f, 0.0f),
-                        new Vector2(12.0f, 1.0f),
-                    }.Select(v => v * scale).ToList();
+                    return new Circle(Vector2.Zero, 60.0f * scale);
+
                 default: throw new NotImplementedException();
             }
         }
@@ -152,6 +138,10 @@ namespace gamejam2014
                         case ZoomLevels.One:
                             PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS),
                                                                               8, TimeSpan.FromSeconds(0.15), true, -1, 1);
+                            break;
+                        case ZoomLevels.Three:
+                            PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + "H" + " " + zoomS),
+                                                                              14, TimeSpan.FromSeconds(0.1), true, -1, 1);
                             break;
                         default:
                             PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS));
@@ -190,13 +180,13 @@ namespace gamejam2014
             //Draw the background.
             const int border = 50,
                       height = 50;
-            Rectangle backgroundRect = new Rectangle(border, windowSize.Y - border - height,
+            Rect backgroundRect = new Rect(border, windowSize.Y - border - height,
                                                      windowSize.X - (2 * border), height);
             TexturePrimitiveDrawer.DrawRect(backgroundRect, sb, backgroundCol, 1);
 
             //Draw the foreground.
             const int border2 = 10;
-            Rectangle foregroundRect = new Rectangle(backgroundRect.X + border2, backgroundRect.Y + border2,
+            Rect foregroundRect = new Rect(backgroundRect.X + border2, backgroundRect.Y + border2,
                                                      (int)(specialAmount * (backgroundRect.Width - (2 * border2))), backgroundRect.Height - (2 * border2));
             TexturePrimitiveDrawer.DrawRect(foregroundRect, sb, foregroundCol, 1);
 

@@ -14,6 +14,17 @@ namespace gamejam2014.Minigames.Minigame_3
         public Circle HillShape;
         public bool HarmonyInsideHill;
 
+        protected override AnimatedSprite GetAlternateHarmonySprite()
+        {
+            if (Harmony.Velocity.Length() == 0.0f) return ArtAssets3.HarmonyJousterStill;
+            return null;
+        }
+        protected override AnimatedSprite GetAlternateDischordSprite()
+        {
+            if (Dischord.Velocity.Length() == 0.0f) return null;
+            return null;
+        }
+
         public Minigame3(ZoomLevels zoom)
             : base(zoom)
         {
@@ -50,6 +61,7 @@ namespace gamejam2014.Minigames.Minigame_3
 
             ArtAssets3.HillSprite.UpdateAnimation(World.CurrentTime);
             ArtAssets3.ConfusedSprite.UpdateAnimation(World.CurrentTime);
+            ArtAssets3.HarmonyJousterStill.UpdateAnimation(World.CurrentTime);
         }
 
         public override void OnHarmonySpecial()

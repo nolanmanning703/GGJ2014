@@ -17,7 +17,7 @@ namespace gamejam2014
         {
             { ZoomLevels.One, new JousterPhysicsData(ZoomLevels.One, 1000.0f, 4.0f, 450.0f, 150.0f, 0.85f) },
             { ZoomLevels.Two, new JousterPhysicsData(ZoomLevels.Two, 1000.0f, 4.0f, 450.0f, 150.0f, 0.85f) },
-            { ZoomLevels.Three, new JousterPhysicsData(ZoomLevels.Three, 1000.0f, 4.0f, 450.0f, 150.0f, 0.85f) },
+            { ZoomLevels.Three, new JousterPhysicsData(ZoomLevels.Three, 1000.0f, 4.0f, 1000.0f, 800.0f, 0.85f) },
             { ZoomLevels.Four, new JousterPhysicsData(ZoomLevels.Four, 1000.0f, 4.0f, 450.0f, 150.0f, 0.85f) },
             { ZoomLevels.Five, new JousterPhysicsData(ZoomLevels.Five, 1000.0f, 4.0f, 600.0f, 350.0f, 0.85f) },
         };
