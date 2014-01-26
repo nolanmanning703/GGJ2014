@@ -59,6 +59,7 @@ namespace gamejam2014.Jousting
         public bool IsMovable { get { return MaxVelocity > 0.0f; } }
 
         public float Mass;
+        public bool IsAbovePlayer;
 
         public event EventHandler<Jousting.Jouster.BounceEventArgs> OnWallBounce;
         public event EventHandler<Jouster.HurtEventArgs> OnHitByJouster;
@@ -75,9 +76,10 @@ namespace gamejam2014.Jousting
 
         public Utilities.Graphics.AnimatedSprite Sprite;
 
-        public Blocker(Utilities.Graphics.AnimatedSprite sprite, Shape colShape, float maxSpeed = 0.0f, float mass = 1.0f)
+        public Blocker(Utilities.Graphics.AnimatedSprite sprite, Shape colShape, bool isAbovePlayer, float maxSpeed = 0.0f, float mass = 1.0f)
             : base(colShape, Single.PositiveInfinity, maxSpeed)
         {
+            IsAbovePlayer = isAbovePlayer;
             Sprite = sprite;
             Mass = mass;
         }

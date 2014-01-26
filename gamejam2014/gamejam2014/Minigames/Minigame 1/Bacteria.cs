@@ -13,7 +13,7 @@ namespace gamejam2014.Minigames.Minigame_1
         public bool IsInfected { get; private set; }
 
         public Bacteria(Microsoft.Xna.Framework.Vector2 pos, float zoomScale)
-            : base(ArtAssets1.GoodBacteria, ArtAssets1.GoodBacteriaShape(pos, zoomScale), Single.PositiveInfinity, PhysicsData1.GoodBacteriaMass)
+            : base(ArtAssets1.GoodBacteria, ArtAssets1.GoodBacteriaShape(pos, zoomScale), true, Single.PositiveInfinity, PhysicsData1.GoodBacteriaMass)
         {
             IsInfected = false;
 

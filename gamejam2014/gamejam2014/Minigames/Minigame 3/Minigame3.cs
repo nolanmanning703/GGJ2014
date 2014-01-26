@@ -27,6 +27,11 @@ namespace gamejam2014.Minigames.Minigame_3
             TimeInHill = 0.0f;
             HarmonyInsideHill = false;
             HillShape = PhysicsData3.GetHillCircle(WorldData.ZoomScaleAmount[CurrentZoom]);
+
+            Blockers.Add(new Jousting.Blocker(new AnimatedSprite(ArtAssets3.DogHouseSprite),
+                                              ArtAssets3.GetDoghouseShape(WorldData.ZoomScaleAmount[CurrentZoom],
+                                                                          PhysicsData3.GetDoghouseCenter(WorldData.ZoomScaleAmount[CurrentZoom])),
+                                              true, 0.0f, 999.0f));
         }
 
         protected override void Update(Jousting.Jouster.CollisionData playerCollision)
@@ -78,6 +83,7 @@ namespace gamejam2014.Minigames.Minigame_3
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
             ArtAssets3.HillSprite.Draw(HillShape.Center, sb);
+            ArtAssets3.DogHouseLowerSprite.Draw(PhysicsData3.GetDoghouseCenter(WorldData.ZoomScaleAmount[CurrentZoom]), sb);
             sb.End();
         }
         protected override void DrawAbovePlayers(SpriteBatch sb)

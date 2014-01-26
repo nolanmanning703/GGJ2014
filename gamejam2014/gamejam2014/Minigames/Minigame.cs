@@ -144,7 +144,7 @@ namespace gamejam2014.Minigames
 
             sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, null, null, World.CamTransform);
 
-            for (int i = 0; i < Blockers.Count; ++i)
+            for (int i = 0; i < Blockers.Count; ++i) if (!Blockers[i].IsAbovePlayer)
             {
                 Blockers[i].Sprite.DrawArgs.Scale *= scale;
                 Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
@@ -152,6 +152,12 @@ namespace gamejam2014.Minigames
             }
             HarmonySprite.Draw(Harmony.Pos, sb);
             DischordSprite.Draw(Dischord.Pos, sb);
+            for (int i = 0; i < Blockers.Count; ++i) if (Blockers[i].IsAbovePlayer)
+            {
+                Blockers[i].Sprite.DrawArgs.Scale *= scale;
+                Blockers[i].Sprite.Draw(Blockers[i].Pos, sb);
+                Blockers[i].Sprite.DrawArgs.Scale *= invScale;
+            }
 
             sb.End();
 

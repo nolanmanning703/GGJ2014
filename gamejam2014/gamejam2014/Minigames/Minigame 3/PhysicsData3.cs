@@ -14,6 +14,9 @@ namespace gamejam2014.Minigames.Minigame_3
 
         public static float TimeInHillToWin = 60.0f;
 
+        private static V2 DoghouseCenter = new V2(0.0f, -200.0f);
+        public static V2 GetDoghouseCenter(float zoomScale) { return zoomScale * DoghouseCenter; }
+
         public static float SpecialStunTime = 6.5f;
     }
 }

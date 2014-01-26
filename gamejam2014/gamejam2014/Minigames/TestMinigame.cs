@@ -23,10 +23,10 @@ namespace gamejam2014.Minigames
 
             Blockers.Add(new Jousting.Blocker(new Utilities.Graphics.AnimatedSprite(Minigame_5.ArtAssets5.BlackHole),
                          new Utilities.Math.Shape.Circle(new Microsoft.Xna.Framework.Vector2(200), scale * 10.0f),
-                         9999.0f));
+                         false, 9999.0f));
             Blockers.Add(new Jousting.Blocker(new Utilities.Graphics.AnimatedSprite(Minigame_5.ArtAssets5.BlackHole),
                          new Utilities.Math.Shape.Circle(scale * new Microsoft.Xna.Framework.Vector2(-200), scale * 10.0f),
-                         0.0f));
+                         true, 0.0f));
             Blockers[0].Sprite.DrawArgs.Scale *= 0.33333f;
             Blockers[1].Sprite.DrawArgs.Scale *= 0.33333f;
             Blockers[1].Velocity = scale * new Microsoft.Xna.Framework.Vector2(500);

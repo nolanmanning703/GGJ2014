@@ -21,7 +21,7 @@ namespace gamejam2014.Minigames.Minigame_5
 
         protected override void Reset()
         {
-            Blockers.Add(new Jousting.Blocker(ArtAssets5.BlackHole, PhysicsData5.GetBlackHole(), 0.0f, 1.0f));
+            Blockers.Add(new Jousting.Blocker(ArtAssets5.BlackHole, PhysicsData5.GetBlackHole(), true, 0.0f, 1.0f));
             Blockers[0].OnHitByJouster += (s, e) =>
             {
                 e.Enemy.Velocity = WorldData.ZoomScaleAmount[World.CurrentZoom] * PhysicsData5.BlackHolePushBack * V2.Normalize(UsefulMath.FindDirection(e.Enemy.Pos, BlackHole.Pos, false));

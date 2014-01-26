@@ -13,18 +13,24 @@ namespace gamejam2014.Minigames.Minigame_3
     {
         public static Utilities.Math.Shape.Shape GetDoghouseShape(float zoomScale, V2 pos)
         {
-            return new Utilities.Math.Shape.Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
-                                                    new List<V2>()
-                                                    {
-                                                        new V2(1.0f),
-                                                        new V2(0.0f, -1.0f),
-                                                        new V2(0.0f, 1.0f),
-                                                    }.Select(v => (v * zoomScale) + pos).ToArray());
+            Utilities.Math.Shape.Shape s = new Utilities.Math.Shape.Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
+                                                                            new List<V2>()
+                                                                            {
+                                                                                new V2(64, 18),
+                                                                                new V2(112, 25.5f),
+                                                                                new V2(112, 99.5f),
+                                                                                new V2(64, 106),
+                                                                                new V2(15, 99.5f),
+                                                                                new V2(15, 25.5f),
+                                                                            }.Select(v => (v * zoomScale) + pos).ToArray());
+            s.Center = pos;
+            return s;
         }
         public static float HillRadius = 50.0f;
 
         public static AnimatedSprite HillSprite;
         public static AnimatedSprite DogHouseSprite;
+        public static AnimatedSprite DogHouseLowerSprite;
         public static AnimatedSprite ConfusedSprite;
 
         public static void Initialize(GraphicsDevice device, ContentManager content)
@@ -36,6 +42,11 @@ namespace gamejam2014.Minigames.Minigame_3
             ConfusedSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/Stunned"), 2, TimeSpan.FromSeconds(0.25), true, -1, 0);
             ConfusedSprite.SetOriginToCenter();
             ConfusedSprite.StartAnimation();
+
+            DogHouseSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/doghouse"));
+            DogHouseSprite.SetOriginToCenter();
+            DogHouseLowerSprite = new AnimatedSprite(content.Load<Texture2D>("Art/Z3 Art/doghouse lower"));
+            DogHouseLowerSprite.SetOriginToCenter();
         }
 
         public static void DrawHillTimeBar(V2 playerPos, float playerTimeInHill, SpriteBatch sb)
