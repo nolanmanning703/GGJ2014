@@ -11,7 +11,7 @@ namespace gamejam2014.Jousting
     /// </summary>
     public class Jouster : MovementPhysics
     {
-        private static JousterPhysicsData PhysData { get { return KarmaWorld.World.PhysicsData; } }
+        public static JousterPhysicsData PhysData { get { return KarmaWorld.World.PhysicsData; } }
 
 
         public class CollisionData
@@ -50,8 +50,8 @@ namespace gamejam2014.Jousting
                moveDir1 = first.Velocity,
                moveDir2 = second.Velocity;
 
-            col.StabStrength1 = V2.Dot(lookDir1, moveDir1);
-            col.StabStrength2 = V2.Dot(lookDir2, moveDir2);
+            col.StabStrength1 = first.Mass * V2.Dot(lookDir1, moveDir1);
+            col.StabStrength2 = second.Mass * V2.Dot(lookDir2, moveDir2);
 
             //If neither player really did damage, exit.
             if (col.StabStrength1 <= 0.0f && col.StabStrength2 <= 0.0f) return null;
@@ -112,7 +112,7 @@ namespace gamejam2014.Jousting
 
         public Jouster(Jousters thisJouster, V2 pos, ZoomLevels zoom)
             : base(new Polygon(Microsoft.Xna.Framework.Graphics.CullMode.CullClockwiseFace,
-                   ArtAssets.GetJousterPolygon(KarmaWorld.World.CurrentZoom).ToArray()),
+                   ArtAssets.GetJousterPolygon(KarmaWorld.World.CurrentZoom, WorldData.ZoomScaleAmount[zoom]).ToArray()),
                    Single.PositiveInfinity, PhysData.MaxSpeed)
         {
             ThisJouster = thisJouster;

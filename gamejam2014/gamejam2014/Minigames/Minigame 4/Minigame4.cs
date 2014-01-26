@@ -51,8 +51,15 @@ namespace gamejam2014.Minigames.Minigame_4
             sb.DrawString(ArtAssets.WorldFont, "Blah", Vector2.Zero, Color.White, 0.0f, Vector2.Zero, WorldData.ZoomScaleAmount[World.CurrentZoom], SpriteEffects.None, 1.0f);
 
             sb.End();
-        } 
-        
+        }
 
+        public override void OnDischordSpecial()
+        {
+            throw new NotImplementedException();
+        }
+        public override void OnHarmonySpecial()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using Utilities;
 using gamejam2014.Jousting;
 
 namespace gamejam2014.Minigames
@@ -26,6 +27,11 @@ namespace gamejam2014.Minigames
 
         public Jouster Harmony, Dischord;
         public List<Blocker> Blockers = new List<Blocker>();
+        private List<Blocker> ToRemove = new List<Blocker>();
+
+        public TimerManager Timers = new TimerManager();
+
+        public float TimeSinceMinigameStart { get; private set; }
 
         protected Utilities.Graphics.AnimatedSprite HarmonySprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Harmony]; } }
         protected Utilities.Graphics.AnimatedSprite DischordSprite { get { return ArtAssets.PlayerSprites[CurrentZoom][Jousting.Jousters.Dischord]; } }
@@ -33,12 +39,21 @@ namespace gamejam2014.Minigames
         private List<Utilities.Graphics.AnimatedSprite> UniqueBlockerSprites = new List<Utilities.Graphics.AnimatedSprite>();
 
 
-        public Minigame(ZoomLevels currentZoom) { CurrentZoom = currentZoom;  MoveUp = false; MoveDown = false; }
+        public Minigame(ZoomLevels currentZoom)
+        {
+            CurrentZoom = currentZoom;
+            MoveUp = false;
+            MoveDown = false;
+
+            TimeSinceMinigameStart = 0.0f;
+        }
 
         public void ResetGame()
         {
             MoveUp = false;
             MoveDown = false;
+
+            TimeSinceMinigameStart = 0.0f;
 
             Harmony = new Jousting.Jouster(Jousting.Jousters.Harmony,
                                            WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Harmony),
@@ -47,15 +62,24 @@ namespace gamejam2014.Minigames
                                             WorldData.GetStartingPos(CurrentZoom, Jousting.Jousters.Dischord),
                                             CurrentZoom);
             Blockers.Clear();
+            Timers.ClearTimers();
 
             Reset();
         }
         public void UpdateGame()
         {
+            Timers.Update(World.CurrentTime);
+            TimeSinceMinigameStart += (float)World.CurrentTime.ElapsedGameTime.TotalSeconds;
+
             //Update players.
             Harmony.Update(World.CurrentTime);
             Dischord.Update(World.CurrentTime);
             Jousting.Jouster.CollisionData colDat = Jousting.Jouster.CheckCollision(Harmony, Dischord);
+
+            //Remove dead blockers..
+            foreach (Blocker b in ToRemove)
+                Blockers.Remove(b);
+            ToRemove.Clear();
 
             //Update blockers.
             UniqueBlockerSprites.Clear();
@@ -113,6 +137,14 @@ namespace gamejam2014.Minigames
             DischordSprite.DrawArgs.Scale *= invScale;
 
             DrawAbovePlayers(sb);
+        }
+
+        /// <summary>
+        /// Queues the given blocker to be destroyed next Update() call.
+        /// </summary>
+        public void KillBlocker(Blocker b)
+        {
+            ToRemove.Add(b);
         }
 
         /// <summary>

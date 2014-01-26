@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -80,56 +81,56 @@ namespace gamejam2014
 
         public static SpriteFont DebugFont, WorldFont;
 
-        public static List<Vector2> GetJousterPolygon(ZoomLevels zoom)
+        public static List<Vector2> GetJousterPolygon(ZoomLevels zoom, float scale)
         {
-            float scale = WorldData.ZoomScaleAmount[zoom];
             switch (zoom)
             {
                 case ZoomLevels.One:
                     return new List<Vector2>()
                     {
-                        new Vector2(64.0f, 32.0f) * scale,
-                        new Vector2(12.0f, 63.0f) * scale,
-                        new Vector2(0.0f, 64.0f) * scale,
-                        new Vector2(0.0f, 0.0f) * scale,
-                        new Vector2(12.0f, 1.0f) * scale,
-                    };
+                        new Vector2(61.0f, 28.0f),
+                        new Vector2(41.0f, 47.0f),
+                        new Vector2(14.0f, 42.0f),
+                        new Vector2(3.0f, 31.0f),
+                        new Vector2(21.0f, 15.0f),
+                        new Vector2(48.0f, 19.0f),
+                    }.Select(v => v * scale).ToList();
                 case ZoomLevels.Two:
                     return new List<Vector2>()
                     {
-                        new Vector2(64.0f, 32.0f) * scale,
-                        new Vector2(12.0f, 63.0f) * scale,
-                        new Vector2(0.0f, 64.0f) * scale,
-                        new Vector2(0.0f, 0.0f) * scale,
-                        new Vector2(12.0f, 1.0f) * scale,
-                    };
+                        new Vector2(64.0f, 32.0f),
+                        new Vector2(12.0f, 63.0f),
+                        new Vector2(0.0f, 64.0f),
+                        new Vector2(0.0f, 0.0f),
+                        new Vector2(12.0f, 1.0f),
+                    }.Select(v => v * scale).ToList();
                 case ZoomLevels.Three:
                     return new List<Vector2>()
                     {
-                        new Vector2(64.0f, 32.0f) * scale,
-                        new Vector2(12.0f, 63.0f) * scale,
-                        new Vector2(0.0f, 64.0f) * scale,
-                        new Vector2(0.0f, 0.0f) * scale,
-                        new Vector2(12.0f, 1.0f) * scale,
-                    };
+                        new Vector2(64.0f, 32.0f),
+                        new Vector2(12.0f, 63.0f),
+                        new Vector2(0.0f, 64.0f),
+                        new Vector2(0.0f, 0.0f),
+                        new Vector2(12.0f, 1.0f),
+                    }.Select(v => v * scale).ToList();
                 case ZoomLevels.Four:
                     return new List<Vector2>()
                     {
-                        new Vector2(64.0f, 32.0f) * scale,
-                        new Vector2(12.0f, 63.0f) * scale,
-                        new Vector2(0.0f, 64.0f) * scale,
-                        new Vector2(0.0f, 0.0f) * scale,
-                        new Vector2(12.0f, 1.0f) * scale,
-                    };
+                        new Vector2(64.0f, 32.0f),
+                        new Vector2(12.0f, 63.0f),
+                        new Vector2(0.0f, 64.0f),
+                        new Vector2(0.0f, 0.0f),
+                        new Vector2(12.0f, 1.0f),
+                    }.Select(v => v * scale).ToList();
                 case ZoomLevels.Five:
                     return new List<Vector2>()
                     {
-                        new Vector2(64.0f, 32.0f) * scale,
-                        new Vector2(12.0f, 63.0f) * scale,
-                        new Vector2(0.0f, 64.0f) * scale,
-                        new Vector2(0.0f, 0.0f) * scale,
-                        new Vector2(12.0f, 1.0f) * scale,
-                    };
+                        new Vector2(64.0f, 32.0f),
+                        new Vector2(12.0f, 63.0f),
+                        new Vector2(0.0f, 64.0f),
+                        new Vector2(0.0f, 0.0f),
+                        new Vector2(12.0f, 1.0f),
+                    }.Select(v => v * scale).ToList();
                 default: throw new NotImplementedException();
             }
         }
@@ -146,8 +147,18 @@ namespace gamejam2014
                 foreach (Jousting.Jousters jouster in Utilities.OtherFunctions.GetValues<Jousting.Jousters>())
                 {
                     string jousterS = (jouster == Jousting.Jousters.Dischord ? "C" : "H");
-                    PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS));
+                    switch (zoom)
+                    {
+                        case ZoomLevels.One:
+                            PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS),
+                                                                              8, TimeSpan.FromSeconds(0.15), true, -1, 1);
+                            break;
+                        default:
+                            PlayerSprites[zoom][jouster] = new AnimatedSprite(content.Load<Texture2D>("Art/Player" + jousterS + " " + zoomS));
+                            break;
+                    }
                     PlayerSprites[zoom][jouster].SetOriginToCenter();
+                    PlayerSprites[zoom][jouster].StartAnimation();
                 }
             }
 

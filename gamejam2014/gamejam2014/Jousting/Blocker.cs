@@ -25,7 +25,7 @@ namespace gamejam2014.Jousting
         {
             if (!first.ColShape.Touches(second.ColShape)) return null;
 
-            BlockerCollisionData dat = new BlockerCollisionData(first, second, first.Velocity, second.Velocity);
+            BlockerCollisionData dat = new BlockerCollisionData(first, second, first.Mass * first.Velocity, second.Mass * second.Velocity);
 
             first.OnHitBlocker(second);
 
@@ -41,9 +41,7 @@ namespace gamejam2014.Jousting
 
             V2 lookDir = UsefulMath.FindDirection(joust.Rotation),
                moveDir = joust.Velocity;
-            float stabStrength = V2.Dot(lookDir, moveDir);
-
-            if (stabStrength <= 0.0f) return Single.NaN;
+            float stabStrength = joust.Mass * V2.Dot(lookDir, moveDir);
 
             block.OnHitJouster(joust, stabStrength);
 
@@ -147,12 +145,18 @@ namespace gamejam2014.Jousting
 
             if (IsMovable)
             {
-                //TODO: Fix.
-                //Dull the jouster's momentum, and push this Blocker forward.
-                V2 newVel = joust.Velocity * KarmaWorld.World.PhysicsData.BounceEnergyScale * PhysicsData.VelocityDampFromHit(stabForce, joust.MaxVelocity);
-                V2 delta = joust.Velocity - newVel;
-                joust.Velocity = newVel;
-                Velocity += delta;
+                //Define "tangent" as the line perpendicular to the line from the Blocker to the Jouster.
+                //Both entities keep the portion of momentum parallel to their tangent,
+                //But swap the portion of momentum perpendicular to their tangent.
+
+                V2 toJoust = joust.Pos - Pos;
+                V2 tangent = V2.Normalize(Utilities.Conversions.GetPerp(toJoust));
+
+                Utilities.Conversions.ParallelPerp blockerPP = Utilities.Conversions.SplitIntoComponents(Velocity, tangent),
+                                                   joustPP = Utilities.Conversions.SplitIntoComponents(joust.Velocity, tangent);
+
+                Velocity = blockerPP.Parallel + (BounceVelocityDamp * joustPP.Perpendicular * joust.Mass / Mass);
+                joust.Velocity = joustPP.Parallel + (Jouster.PhysData.BounceEnergyScale * blockerPP.Perpendicular * Mass / joust.Mass);
             }
             else
             {

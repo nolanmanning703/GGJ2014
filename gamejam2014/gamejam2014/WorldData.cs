@@ -135,8 +135,8 @@ namespace gamejam2014
         
         public static Dictionary<ZoomLevels, Minigame> Minigames = new Dictionary<ZoomLevels, Minigame>()
         {
-            { ZoomLevels.One, new TestMinigame(ZoomLevels.One) },
-            { ZoomLevels.Two, null },
+            { ZoomLevels.One, new Minigames.Minigame_1.Minigame1(ZoomLevels.One) },
+            { ZoomLevels.Two, new TestMinigame(ZoomLevels.Two) },
             { ZoomLevels.Three, null },
             { ZoomLevels.Four, null },
             { ZoomLevels.Five, new Minigames.Minigame_5.Minigame5(ZoomLevels.Five) },

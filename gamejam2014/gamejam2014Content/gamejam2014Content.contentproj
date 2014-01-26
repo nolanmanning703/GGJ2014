@@ -69,10 +69,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Art\Z1 Art\" />
     <Folder Include="Art\Z2 Art\" />
     <Folder Include="Art\Z3 Art\" />
-    <Folder Include="Art\Z4 Art\" />
     <Folder Include="Sound\" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +158,60 @@
     </Compile>
     <Compile Include="Art\Special H.png">
       <Name>Special H</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Art\Z1 Art\Pickup Good.png">
+      <Name>Pickup Good</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z1 Art\Pickup Infected.png">
+      <Name>Pickup Infected</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Art\Z4 Art\bad1.png">
+      <Name>bad1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\bad2.png">
+      <Name>bad2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\bad3.png">
+      <Name>bad3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\bad4.png">
+      <Name>bad4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\good1.png">
+      <Name>good1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\good2.png">
+      <Name>good2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\good3.png">
+      <Name>good3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Art\Z4 Art\good4.png">
+      <Name>good4</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
