@@ -10,8 +10,8 @@ namespace gamejam2014
     /// </summary>
     public class KarmaCamera : Camera
     {
-        public V2 CamTarget { get { return entity.CameraTarget; } set { entity.CameraTarget = value; } }
-        public V2 Position { get { return entity.Pos; } set { entity.Pos = value; } }
+        public V2 K_CamTarget { get { return entity.CameraTarget; } set { entity.CameraTarget = value; } }
+        public V2 K_Position { get { return entity.Pos; } set { entity.Pos = value; } }
 
         private class NoMoveEntity : Utilities.PositionalEntity { public V2 CameraTarget { get; set; } public V2 Pos { get; set; } }
         private static NoMoveEntity entity = new NoMoveEntity(); //Making this static because there will only be one camera, and otherwise I can't pass it to the base constructor.
@@ -23,11 +23,13 @@ namespace gamejam2014
             ZoomData.MaxZoom = Single.MaxValue;
             ZoomData.MinZoom = Single.Epsilon;
 
-            PhysicsData.Acceleration = c => 99999.0f;
-            PhysicsData.SnapToPlayerMaxDist = 1000.0f;
-            PhysicsData.Speed = c => 999999.0f;
-            PhysicsData.WorldHeight = 999999.0f;
-            PhysicsData.WorldWidth = 999999.0f;
+            PhysicsData.Acceleration = c => 9999999.0f;
+            PhysicsData.SnapToPlayerMaxDist = 999.0f;
+            PhysicsData.Speed = c => 99999.0f;
+            PhysicsData.WorldHeight = 99999.0f;
+            PhysicsData.WorldWidth = 99999.0f;
+
+            PhysicsData.PlayerToTargetLerp = 1.0f;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace gamejam2014
             { ZoomLevels.Four, 10.0f },
             { ZoomLevels.Five, 100.0f },
         };
-        public static float CameraZoomSpeedScale = 35.0f;
+        public static float CameraZoomSpeedScale = 15.0f;
 
         public static int ZoomToInt(ZoomLevels zoom)
         {
